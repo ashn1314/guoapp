@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:duanju_app/app_bottom_navigation.dart';
 import 'package:duanju_app/app_theme.dart';
 import 'package:duanju_app/home_screen.dart';
 import 'package:duanju_app/local_store.dart';
@@ -25,8 +24,8 @@ void main() {
     return LocalStore(await SharedPreferences.getInstance());
   }
 
-  void phone(WidgetTester tester, [double width = 390]) {
-    tester.view.physicalSize = Size(width, 844);
+  void television(WidgetTester tester) {
+    tester.view.physicalSize = const Size(1280, 720);
     tester.view.devicePixelRatio = 1;
     tester.view.padding = const FakeViewPadding(top: 24, bottom: 24);
     addTearDown(tester.view.reset);
@@ -63,7 +62,7 @@ void main() {
   testWidgets(
     'default theme follows the system from bootstrap through browsing',
     (tester) async {
-      phone(tester);
+      television(tester);
       addTearDown(tester.platformDispatcher.clearPlatformBrightnessTestValue);
       final repository = FixtureRepository();
       tester.platformDispatcher.platformBrightnessTestValue = Brightness.light;
@@ -99,12 +98,12 @@ void main() {
   testWidgets('settings changes open routes without losing the active tab', (
     tester,
   ) async {
-    phone(tester);
+    television(tester);
     final store = await localStore();
     final repository = FixtureRepository();
     await tester.pumpWidget(DuanjuApp(repository: repository, store: store));
     await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const ValueKey('bottom-nav-1')));
+    await tester.tap(find.byKey(const ValueKey('tv-nav-1')));
     await tester.pumpAndSettle();
     expect(find.text('我的追剧'), findsOneWidget);
     await tester.tap(find.byTooltip('更多'));
@@ -133,9 +132,9 @@ void main() {
     expect(find.text('我的追剧'), findsOneWidget);
     expect(
       tester
-          .widget<AppBottomNavigation>(find.byType(AppBottomNavigation))
-          .selectedIndex,
-      1,
+          .widget<RemoteButton>(find.byKey(const ValueKey('tv-nav-1')))
+          .selected,
+      isTrue,
     );
     final requests = repository.requests.length;
     await store.setThemeMode('system');
@@ -162,7 +161,6 @@ void main() {
     testWidgets(
       '$count navigation destinations support large text and keyboard input',
       (tester) async {
-        phone(tester, 320);
         final semantics = tester.ensureSemantics();
         var selected = 0;
         await tester.pumpWidget(
@@ -174,27 +172,21 @@ void main() {
                   context,
                 ).copyWith(textScaler: TextScaler.linear(2)),
                 child: Scaffold(
-                  bottomNavigationBar: AppBottomNavigation(
-                    selectedIndex: selected,
-                    onDestinationSelected: (value) =>
-                        setState(() => selected = value),
-                    destinations: [
-                      const NavigationDestination(
-                        icon: Icon(Icons.explore_outlined),
-                        label: '发现',
-                      ),
-                      const NavigationDestination(
-                        icon: Icon(Icons.bookmark_border),
-                        label: '追剧',
-                      ),
-                      const NavigationDestination(
-                        icon: Icon(Icons.history),
-                        label: '最近观看',
-                      ),
-                      if (count == 4)
-                        const NavigationDestination(
-                          icon: Icon(Icons.download_outlined),
-                          label: '下载',
+                  body: Column(
+                    children: [
+                      for (final (index, entry) in [
+                        (0, (Icons.explore_rounded, '发现')),
+                        (1, (Icons.bookmark_rounded, '追剧')),
+                        (2, (Icons.history_rounded, '最近观看')),
+                        if (count == 4)
+                          (3, (Icons.download_rounded, '下载')),
+                      ].indexed)
+                        RemoteButton(
+                          key: ValueKey('tv-nav-${entry.$1}'),
+                          label: entry.$2.$2,
+                          icon: entry.$2.$1,
+                          selected: selected == entry.$1,
+                          onPressed: () => setState(() => selected = entry.$1),
                         ),
                     ],
                   ),
@@ -205,11 +197,11 @@ void main() {
         );
         await tester.pumpAndSettle();
         for (var i = 0; i < count; i++) {
-          final size = tester.getSize(find.byKey(ValueKey('bottom-nav-$i')));
+          final size = tester.getSize(find.byKey(ValueKey('tv-nav-$i')));
           expect(size.width, greaterThanOrEqualTo(48));
           expect(size.height, greaterThanOrEqualTo(48));
         }
-        await tester.tap(find.byKey(const ValueKey('bottom-nav-1')));
+        await tester.tap(find.byKey(const ValueKey('tv-nav-1')));
         await tester.pumpAndSettle();
         expect(selected, 1);
         for (var i = 0; i < count; i++) {
@@ -228,7 +220,7 @@ void main() {
   testWidgets(
     'player shell follows light theme while video controls stay dark',
     (tester) async {
-      phone(tester);
+      television(tester);
       debugDefaultTargetPlatformOverride = TargetPlatform.android;
       addTearDown(() => debugDefaultTargetPlatformOverride = null);
       final store = await localStore();

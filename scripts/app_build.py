@@ -5,6 +5,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True)
 class BuildVariant:
     all_sources: bool = False
+    television_only: bool = False
 
     @property
     def name(self):
@@ -16,11 +17,15 @@ class BuildVariant:
 
     @property
     def arguments(self):
-        return ['--all-sources'] if self.all_sources else []
+        return (['--all-sources'] if self.all_sources else []) + (
+            ['--television-only'] if self.television_only else [])
 
     @property
     def flutter_arguments(self):
-        return ['--dart-define=ALL_SOURCES=' + str(self.all_sources).lower()]
+        return [
+            '--dart-define=ALL_SOURCES=' + str(self.all_sources).lower(),
+            '--dart-define=TELEVISION_ONLY=' + str(self.television_only).lower(),
+        ]
 
     @property
     def linker_flags(self):
@@ -35,9 +40,12 @@ class BuildVariant:
             key, separator, value = base64.b64decode(item, validate=True).decode('utf-8').partition('=')
             if separator:
                 values[key] = value
-        return cls(values.get('ALL_SOURCES') == 'true')
+        return cls(values.get('ALL_SOURCES') == 'true',
+                   values.get('TELEVISION_ONLY') == 'true')
 
 
 def add_variant_argument(parser):
     parser.add_argument('--all-sources', action='store_true',
                         help='构建包含全部站源的真果鉴；默认构建仅红果的红果鉴')
+    parser.add_argument('--television-only', action='store_true',
+                        help='锁定 Android 电视 / 遥控器界面')

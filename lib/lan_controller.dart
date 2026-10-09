@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
@@ -136,7 +135,7 @@ class LanController extends ChangeNotifier with WidgetsBindingObserver {
     return switch (kind) {
       'tv' => '电视',
       'computer' => '电脑',
-      _ => Platform.isIOS ? 'iPhone' : 'Android 手机',
+      _ => 'Android 电视',
     };
   }
 

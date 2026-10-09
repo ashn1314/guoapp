@@ -11,8 +11,8 @@ from pathlib import Path
 
 
 SOURCE_DIRECTORIES = {
-    '.github', 'lib', 'native', 'android', 'windows', 'ios', 'macos', 'linux',
-    'web', 'assets', 'packages', 'scripts', 'test', 'test_driver', 'integration_test',
+    '.github', 'lib', 'native', 'android',
+    'web', 'assets', 'scripts', 'test', 'test_driver', 'integration_test',
 }
 SOURCE_FILES = {
     '.gitattributes', '.gitignore', '.metadata', '.editorconfig',
@@ -42,16 +42,11 @@ EXCLUDED_PATTERNS = (
 )
 EXCLUDED_PATHS = {
     'android/gradlew', 'android/gradlew.bat',
-    'windows/runner/duanju_core.h',
-    'windows/flutter/generated_plugin_registrant.cc',
-    'windows/flutter/generated_plugin_registrant.h',
-    'windows/flutter/generated_plugins.cmake',
 }
 REQUIRED_FILES = {
     'AGENTS.md', 'README.md', 'pubspec.yaml', 'pubspec.lock', 'lib/main.dart',
     'native/go.mod', 'native/go.sum', 'native/bridge/main.go',
     'android/app/build.gradle.kts', 'android/gradle/wrapper/gradle-wrapper.properties',
-    'windows/CMakeLists.txt', 'windows/flutter/CMakeLists.txt',
     '.github/workflows/build.yml', 'scripts/build_native.py',
 }
 
@@ -77,8 +72,6 @@ def excluded(relative):
     if name.startswith('.env') and name not in {'.env.example', '.env.sample', '.env.template'}:
         return True
     if any(fnmatch.fnmatchcase(part.lower(), pattern) for part in relative.parts for pattern in EXCLUDED_PATTERNS):
-        return True
-    if relative.parts[:2] in {('windows', 'x64'), ('windows', 'x86')}:
         return True
     return False
 

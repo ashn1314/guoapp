@@ -7,7 +7,6 @@ android/.gradle/
 android/local.properties
 android/app/src/main/jniLibs/
 native/build/
-windows/runner/duanju_core.dll
 *.log
 *.jks
 *.keystore
@@ -17,9 +16,6 @@ key.properties
 .DS_Store
 .idea/
 *.iml
-windows/runner/duanju_core.h
-windows/flutter/generated_plugin_registrant.*
-windows/flutter/generated_plugins.cmake
 .venv/
 venv/
 .pytest_cache/
@@ -30,11 +26,3 @@ venv/
 !.env.template
 *.p12
 *.pfx
-ios/Pods/
-ios/.symlinks/
-ios/Flutter/ephemeral/
-ios/Flutter/Generated.xcconfig
-ios/Flutter/flutter_export_environment.sh
-ios/Runner/GeneratedPluginRegistrant.*
-ios/DuanjuCore/*.xcframework/
-**/xcuserdata/

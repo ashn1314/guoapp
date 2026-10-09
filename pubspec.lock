@@ -420,13 +420,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.7"
-  media_kit_libs_windows_video:
-    dependency: "direct overridden"
-    description:
-      path: "packages/media_kit_libs_windows_video"
-      relative: true
-    source: path
-    version: "1.0.11+duanju.1"
   media_kit_video:
     dependency: "direct main"
     description:
@@ -912,14 +905,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.4.0"
-  window_manager:
-    dependency: "direct main"
-    description:
-      name: window_manager
-      sha256: "05c231fd7b23d2380f14c5cc10b7b93d60d4fa4a2fb4e0f032de27e44b5560e9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.5.2"
   windows_file_picker:
     dependency: transitive
     description:

@@ -1,6 +1,10 @@
-# 红果鉴 / 真果鉴
+# 红果鉴 / 真果鉴（Android 电视版）
+本版本为 **Android 电视专用版**。原本的手机、平板、Windows 桌面与 iOS 分支代码、平台工程与构建项已全部删除，界面固定为遥控器导航与横屏布局，编译开关 `--television-only` 已成为唯一模式。
 
-Flutter 多端独立短剧应用，原名“短剧库 APP”。站源请求、解析、下载和播放均在设备上完成，不依赖旧项目或自建服务。当前源码版本：**0.2.30+36（未验证开发快照）**。本轮优化全屏自动连播：切换到下一集时不主动弹出控制栏，保持连续观看；首次进入、手动切集、暂停、缓冲和用户操作仍按需显示控制栏。0.2.29 补强 Android 电视 / 盒子自动识别，并将电视模式的横屏规则统一到应用与原生 Activity：自动识别或手选电视模式后保持横屏，覆盖播放、返回和前后台恢复；切回手机模式恢复方向跟随。已生成全站源版 Android ARM64 Release 包 `dist/android/zhenguojian-0.2.30+36-arm64-v8a.apk`，完成包级校验但尚未实机验证。0.2.28 为 `finish_task.py` 增加同级源码压缩包输出，去掉帝果 VIP 标记分集的播放确认弹窗，点击后直接进入播放器解析；其它站源的 VIP 试看提示保持不变。0.2.26 已参考 `/Users/macbookpro/Downloads/dsd-video-parser` 重新实现帝果播放解析：原生核心会经 `/addons/vplayer/` 解 aaencode 签名脚本取得 `vPath`，并恢复全站源版帝果入口；真实播放、下载与平台行为仍待集中验证。0.2.24 已按移动端和电视端实测卡顿反馈，将画质增强收窄为仅 Windows 桌面端可见和可运行；Android 手机、Android TV 与 iOS 均隐藏入口并不初始化增强链路。0.2.23 已修正播放器全屏控制栏层级：顶部只保留返回与标题，播放、进度、选集、设置、画中画和全屏统一收在底部控制区；全屏设置与选集弹窗保持深色。0.2.22 已修正移动端竖屏播放页布局，选集默认折叠为入口，不再像详情页一样常驻铺开。0.2.21 已修正播放器主题跟随、画质增强设置展开逻辑、原画对比可用条件和 Android 自动档增强策略，并按当前前台 Android App 进程定位日志。0.2.20 已接入 Android 手机/平板播放器画中画入口、原生 PiP 桥接和进入画中画时的播放保活；Windows、Android TV 与 iOS 暂未接入系统级画中画。0.2.19 已将该站源面向用户的显示名统一改为“剧果”，内部站源标识仍保留 `huangju` 以兼容已有缓存、权限和同步记录。已有 `zhenguojian-0.2.17+23-arm64-v8a.apk` 被用户报告启动闪退，已生成全站源版 Android arm64 release 包 `dist/android/zhenguojian-0.2.24+30-arm64-v8a.apk`，尚未安装到设备验收。
+
+Flutter Android 电视独立短剧应用，原名“短剧库 APP”。站源请求、解析、下载和播放均在设备上完成，不依赖旧项目或自建服务。当前源码版本：**0.2.30+36（未验证开发快照）**。本轮优化全屏自动连播：切换到下一集时不主动弹出控制栏，保持连续观看；首次进入、手动切集、暂停、缓冲和用户操作仍按需显示控制栏。0.2.29 补强 Android 电视 / 盒子自动识别，并将电视模式的横屏规则统一到应用与原生 Activity：自动识别或手选电视模式后保持横屏，覆盖播放、返回和前后台恢复；切回手机模式恢复方向跟随。已生成全站源版 Android ARM64 Release 包 `dist/android/zhenguojian-0.2.30+36-arm64-v8a.apk`，完成包级校验但尚未实机验证。0.2.28 为 `finish_task.py` 增加同级源码压缩包输出，去掉帝果 VIP 标记分集的播放确认弹窗，点击后直接进入播放器解析；其它站源的 VIP 试看提示保持不变。0.2.26 已参考 `/Users/macbookpro/Downloads/dsd-video-parser` 重新实现帝果播放解析：原生核心会经 `/addons/vplayer/` 解 aaencode 签名脚本取得 `vPath`，并恢复全站源版帝果入口；真实播放、下载与平台行为仍待集中验证。0.2.24 已按移动端和电视端实测卡顿反馈，将画质增强收窄为仅 Windows 桌面端可见和可运行；Android 手机、Android TV 与 iOS 均隐藏入口并不初始化增强链路。0.2.23 已修正播放器全屏控制栏层级：顶部只保留返回与标题，播放、进度、选集、设置、画中画和全屏统一收在底部控制区；全屏设置与选集弹窗保持深色。0.2.22 已修正移动端竖屏播放页布局，选集默认折叠为入口，不再像详情页一样常驻铺开。0.2.21 已修正播放器主题跟随、画质增强设置展开逻辑、原画对比可用条件和 Android 自动档增强策略，并按当前前台 Android App 进程定位日志。0.2.20 已接入 Android 手机/平板播放器画中画入口、原生 PiP 桥接和进入画中画时的播放保活；Windows、Android TV 与 iOS 暂未接入系统级画中画。0.2.19 已将该站源面向用户的显示名统一改为“剧果”，内部站源标识仍保留 `huangju` 以兼容已有缓存、权限和同步记录。已有 `zhenguojian-0.2.17+23-arm64-v8a.apk` 被用户报告启动闪退，已生成全站源版 Android arm64 release 包 `dist/android/zhenguojian-0.2.24+30-arm64-v8a.apk`，尚未安装到设备验收。
+
+**0.3.0+37（Android 电视专用版）**：移除手机、平板、Windows 桌面与 iOS 的全部分支代码、平台工程目录与构建脚本，`lib` 由 27233 行精简至 22793 行。画质增强模块一并删除——其底层依赖 `d3d11vpp`（Direct3D 11 硬件视频处理器），Android 电视不具备该滤镜，0.2.24 记录的移动端卡顿即与此相关；如需在电视端重新实现，须改用 Vulkan / MediaCodec VPP 或软件超分路径并重新评估盒子算力与温控，属于独立工程。播放器固定为遥控器控制栏，删除手机手势层（上滑切集、长按 3 倍速）、旋转全屏、画中画、竖屏播放面板与底部导航；倍速改从播放设置弹窗调整。manifest 标记 leanback 为必需、touchscreen 为不兼容，系统不会把该包安装到手机或平板。以下 0.2.x 记录为精简前的历史流水。
 
 按用户 2026-09-21 的要求，继续暂停整体验证。启动、榜单、画质增强、站源改名、画中画、帝果解析重做、连续播放控制栏优化和本轮帝果播放确认调整只做源码实现、依赖锁定、格式整理与收尾同步；本次已额外完成 `0.2.30+36` 全站源版 Android ARM64 Release 构建和包级检查，未安装到设备或执行播放回归。帝果播放问题按本次追加要求迁移参考项目公开解析链路并取消前置确认；不实现或测试绕过 VIP / 试看限制。历史版本的检查记录不能作为本轮新增功能的验收结论。
 
@@ -315,298 +319,11 @@ exports/
 
 支持专用播放 / 暂停、上一集、下一集按键。播放中无操作 5 秒后隐藏控制条，暂停和操作弹窗时保持可见。竖屏视频保持原比例，不裁剪填满电视。
 
-## 视频画质增强与超分方案（2026-09-22 调研，0.2.18 已接入源码）
+## 视频画质增强与超分（已下线）
 
-**0.2.18 曾在现有 media_kit / libmpv 播放器上接入实时画质增强源码，覆盖通用／真人短剧与动漫／AI 动漫；0.2.24 按手机和电视端卡死反馈，将实际入口和运行链路收窄为仅 Windows 桌面端。** Android 手机、Android TV 与 iOS 不再显示或初始化该功能，保留历史调研供后续重新评估轻量移动端方案。Windows 仍包含 FSRCNNX 与按实际运行条件选择的 NVIDIA / Intel VPP。
+0.2.18 曾在 media_kit / libmpv 播放器上接入实时画质增强，0.2.24 起收窄为仅 Windows 桌面端。本电视专用版已随 Windows 平台工程一并移除：底层依赖 `d3d11vpp`（Direct3D 11 硬件视频处理器），Android 电视不具备该滤镜，0.2.24 记录的移动端卡顿即与此相关。相关源码、资源与依赖已从仓库删除，播放器不再提供增强入口与原画对比。
 
-本节保留基于 **0.2.15+21** 播放链路的调研依据，并更新至 0.2.24 的源码实施状态。增强入口仅在 Windows 桌面端位于“播放设置”和“清晰度”面板，默认关闭；“源站清晰度”与增强后的输出尺寸分别显示。Android 手机、Android TV 与 iOS 隐藏入口并跳过后端初始化。没有运行本 App 的 Windows 画质、持续性能或完整回归，下文论文数字与工程阈值不能当作本 App 实测成绩。
-
-### 本轮接入范围
-
-| 项目 | 0.2.18 源码行为 |
-| --- | --- |
-| 档位与内容 | 关闭 / 自动 / 省电增强 / 清晰优先；跟随分类 / 通用／真人 / 动漫／AI 动漫。自动内容判断只使用明确动漫分类或标签，不把泛指“AI”的写实内容当作动漫 |
-| 通用增强 | `spline36` 缩放兜底；有效 LUMA 使用 RAVU-Lite-AR，硬解 RGB 使用 RAVU RGB。Windows 清晰优先可使用 FSRCNNX x2_8-0-4-1；同一时刻只装载一种主增强算法 |
-| 动漫与 AI 动漫 | 选用 Anime4K Upscale+Denoise CNN x2 S，使用 MAIN / RGB，限制输入、倍率和中间纹理预算；不使用强 Restore 或人脸生成模块。写实 AI 内容可手动选通用档，实际压缩域效果待验收 |
-| 输出与格式 | 以视频区域物理像素、源宽高比和旋转计算尺寸；Android / TV 输出最多 2073600 像素，Windows 最多 8294400 像素。未知色彩、HDR / 10-bit 保持原处理；MediaCodec 不公开像素格式时，只有明确 8-bit 的 H.264 / HEVC profile 且为 SDR 才尝试 RGB 增强 |
-| Android 适配 | 保持现有 GPU、硬解与 WID 生命周期；首次需要调整尺寸时接管固定版本插件的尺寸订阅，通过既有原生接口调整 Surface。关闭增强前未使用尺寸适配时，保留插件原有订阅 |
-| Windows 原生库 | 本项目 `packages/media_kit_libs_windows_video` 只维护原生库插件，保留上游 MIT 声明。固定通用 x64 `20260921 / e76a35ec95` libmpv 与 ANGLE 1.0.1，下载时校验 SHA256，在配置期解包以保证头文件与链接库先就绪；未强制切换 gpu-next |
-| 硬件增强 | 仅清晰优先、通用内容、插电、实际 D3D11 硬解与对应 GL 渲染器、足够新的 mpv 和 8-bit 输入满足时尝试带独立标签的 VPP。滤镜与输出尺寸确认后仍提示驱动效果需看对比，未声称品牌相同就一定有效 |
-| 生效与恢复 | 检查真实输出尺寸、mpv 渲染尺寸和 Shader 最后阶段；半浮点纹理失败、无渲染 Pass 或原生属性返回错误会撤回本功能配置并降级，重复失败后停止本次自动尝试。图形错误独立处理，避免直接触发站源切线 |
-| 功耗与持续性能 | Android 读取省电、供电、低内存和热状态，headroom 最多每 10 秒读一次；Windows 读取供电、节电与内存。2 秒采样渲染耗时与丢帧，排除切集、seek、缓冲及倍速调度后，持续过载降档；温控和性能降档在本集内保持 |
-| 资源与交互 | Shader、上游许可和 SHA256 清单随包提供，释放到应用私有目录；无需额外下载模型。设置按用户保存并兼容旧备份。菜单及播放控制条提供原画对比，TV 使用遥控按钮，保留长按 3 倍速；不改变下载文件或局域网进度协议 |
-
-本轮取得的固定依赖摘要：libmpv 压缩包 SHA256 为 `361392d64a231830ac79d1c0f91ddb68c6a709accd282b2c87b13889d382fdec`；ANGLE 为 `cc5911bb15d596fd5a2b362613ad35b7093b427117269a7359054a65746a5f9a`。四份 Shader 的上游提交、大小和哈希在 `assets/video_enhancement/manifest.json` 中，RAVU 的固定提交内容已与随包文件核对。资源校验与源码接入不代表画面质量或驱动效果已通过验收。
-
-### 场景判断与效果边界
-
-首先保留最高可用源画质和正确解码。红果解析已有选择最高可用候选的逻辑；超分不能替代源站原生高码率版本，也不能把处理后的显示尺寸标成源站提供的 1080P。正常播放仍使用现有设备内流服务和 libmpv，增强发生在设备 GPU，不增加远程处理服务、不转码在线播放内容、不改写下载文件。
-
-| 短剧的实际问题 | 优先处理 | 预期与边界 |
-| --- | --- | --- |
-| 分辨率低，放大后轮廓和字边发软 | 高质量缩放、轻量学习型放大，必要时小型 CNN | 可以改善边缘和局部细节；恢复的纹理不是可证明的原始细节 |
-| 码率低，马赛克、蚊噪和重压缩明显 | 温和去伪影与匹配真实退化的模型 | 直接加大锐化容易放大噪声；保留皮肤、发丝、衣料，避免塑料感 |
-| 快速运动、镜头切换、字幕频繁变化 | 优先时序稳定和播放期限 | 单张照片看着更锐不代表视频更好；重点防闪烁、拖影和字幕笔画跳动 |
-| AI 动漫、二维线条或风格化三维动画 | 独立动漫档、小型去噪 / 放大 CNN，并保留手动通用档 | AI 不是单一画风；写实面孔仍优先通用策略，线条稳定性和字幕需单独验收 |
-| 原片已经被美颜磨皮、失焦或严重压缩 | 保守增强，保留原画对比 | 不承诺还原真实面部细节，不默认附加人脸重建模型 |
-| 实际显示尺寸小于原片，或设备已吃紧 | 正常缩放 / 自动降级 | 不为了“超分已开启”额外放大再缩小，浪费算力与电量 |
-
-Real-ESRGAN 对复杂退化、振铃和过冲建模，RealBasicVSR 指出时序传播也可能放大压缩伪影，说明“先处理退化，再适度重建”比堆叠锐化更符合本场景。[SR13]、[SR14] 2026 年针对真实短视频的 UGC 修复挑战也纳入调研，但研究模型的质量成绩不能直接当作手机播放器的可部署性证明。[SR20]
-
-### 已核实的播放器接入条件
-
-| 已核实事实 | 对实施的要求 |
-| --- | --- |
-| 项目使用 `media_kit 1.2.6`、`media_kit_video 2.0.1`；原播放链路直接创建 `VideoController` | 0.2.18 固定这两个版本，并从 `lib/player_screen.dart` 接入统一增强控制器、偏好与菜单 |
-| 已安装的 media_kit 初始化时设置 `scale=bilinear`、`dscale=bilinear`、`correct-downscaling=no`，增强关闭时保持原设置 | 高质量缩放本身就是可实施的第一步，但应明确称为画质增强，不标成神经网络超分 |
-| media_kit_video 通常按视频 `dw/dh` 创建输出纹理；桌面提供 `setSize`，本版本 Android 的该方法直接抛出 `UnsupportedError` | 先补齐输出尺寸管理。只换 Shader，可能仍然让 Flutter 把原尺寸纹理放大，甚至让按放大比例触发的 Shader 一次也不执行 |
-| Android 当前使用 `vo=gpu`、OpenGL ES 和 `hwdec=auto-safe`；mpv 的 AImageReader 硬解映射会产生 `RGB0 / external OES` 纹理 | `HOOK LUMA` 不一定存在。优先提供作用于 `MAIN` 的 RGB 路线，不能以关闭硬解、逐帧读回 CPU 为代价强行启用亮度 Shader。[SR04] |
-| Windows 当前是 `vo=libmpv` 的 OpenGL Render API，经 ANGLE 与 D3D11 纹理交互 | 它不是独立 mpv 的原生 D3D11 VO。不能直接把网上的 `vo=gpu-next` / `gpu-api=d3d11` 配置套进现有控件。[SR03] |
-| 原 `media_kit_libs_windows_video 1.0.11` 的构建配置指向 `2023-09-24 / 652a1dd`；该提交的 `d3d11vpp` 没有超分缩放参数 | NVIDIA / Intel 缩放支持于 2024-08-20 的 PR #14698 合入。Windows 硬件超分必须更新并固定原生库，不能仅更新 Dart 参数。[SR05]、[SR06] |
-| 新版 mpv 存在 `hwdec_d3d11egl`，可从 ANGLE 获取 D3D11 设备并注册硬解上下文 | Windows 优先验证复用这条互通路径。不能只因“使用 OpenGL”判定完全不可行，也不能据此承诺当前二进制必然可用。[SR07] |
-
-这些结论依据本机锁定依赖源码及 mpv 上游代码，不依赖启动 App 得到的假设。[SR01] libmpv Render API 当前公开的后端是 OpenGL 与软件渲染；改成 Vulkan / libplacebo 全新输出涉及原生插件工程，不能作为一个低成本开关处理。[SR03]
-
-### 算法与成熟实现的取舍
-
-| 路线 | 与真人短剧的匹配程度 | 成本与限制 | 本项目建议 |
-| --- | --- | --- | --- |
-| mpv 高质量缩放：`spline36`，有余量再比较 `ewa_lanczossharp` | 适合通用放大，风格较保守 | 相对轻量，不会重建被抹掉的信息；锐利滤镜也可能振铃 | 首期基础档，并作为评判其他算法的对照 |
-| RAVU：`ravu-lite-ar-r2`、`ravu-r2-rgb`、`ravu-zoom-ar-r2-rgb` | 学习型滤波放大，适合先做低成本提升 | LUMA 与 RGB 版本入口不同；zoom 支持任意倍率但在目标尺寸计算，并非总比 2倍版本快 | 首期重点候选；按实际纹理格式、倍率、耗时选一个，不叠加运行。[SR08] |
-| FSRCNNX `x2_8-0-4-1` 通用模型 | 真正的小型神经网络放大，发布说明包含轻度压缩退化训练 | 是单帧 CNN；默认只作用于 LUMA，需要处理硬解 RGB 路径，不能直接套到所有手机 | Windows 神经超分候选；手机后续适配。排除 LineArt 变体作为真人默认。[SR09]、[SR10] |
-| ArtCNN / Anime4K | 面向动漫，与真人皮肤和发丝的目标不同，也需按 AI 动漫的实际风格选择 | ArtCNN 区分实时 C 系列和较重的 R 系列；Anime4K 整套强预设不能直接套到低清重压缩视频 | 本轮独立动漫档接入小型 Upscale+Denoise CNN S，保留通用档，真实低清与字幕效果待验收。[SR11]、[SR12] |
-| NVIDIA RTX / Intel VSR，mpv `d3d11vpp` | Windows 上值得优先接入的专用视频增强路径 | 依赖显卡、驱动、D3D11 上下文、输入格式及系统设置，配置成功不等于推理实际启用 | Windows 第二批重点；不满足条件立即回到通用增强。[SR06]、[SR23] |
-| Real-ESRGAN 通用小模型 / RealBasicVSR | 前者考虑真实退化，后者利用多帧信息，适合作为效果对照 | 全链路开销、显存、帧间闪烁 / 状态管理都高于简单缩放；公开图片工具不是实时播放器插件 | 后续 Windows 本地离线修复候选，首期不塞进手机每帧路径。[SR13]、[SR14]、[SR26] |
-| 2026 Mobile Real-World SR、PLKSR-Rep 等紧凑模型 | 研究方向贴近真实退化，优于只看动漫或双三次降采样榜单 | 竞赛测速是小图单帧；仍需模型转换、GPU / NPU 适配和视频稳定性验证 | 手机第二代神经超分候选，保留可替换后端，不先自训大模型。[SR16]、[SR17] |
-| SeedVR2 / FlashVSR 等扩散式修复 | 能生成丰富细节，适合高算力修复研究 | 存在细节生成、时间窗口、显存和算力成本；“one-step / streaming”不等于普通设备实时 | 不纳入在线播放首期；如以后做离线修复，单独评估。[SR18]、[SR19] |
-| AMD AMF HQScaler / VideoSR | 是额外可研究的 Windows 原生增强路线 | 接口含 VideoSR1.0 / 1.1；不能把名称含 SR 等同于通用神经网络，多了一套 AMF 互通成本 | 首期 AMD 使用通用 Shader；后续按实测收益决定是否单独接入。[SR35] |
-
-**推荐组合：高质量缩放兜底 → 适合当前纹理的轻量 RAVU → 已验收设备上的小型 CNN 或 Windows 硬件超分。** 同一帧只选一套增强主算法，避免 RAVU、CNN、RTX 和强锐化连续叠加。锐化 / FSR1 类空间缩放与神经网络超分分别命名。FSR2 等游戏时序方案需要深度、运动矢量、相机抖动等输入，普通解码视频不能直接复用其接入方式。[SR36]
-
-### 论文数字和社区经验应如何使用
-
-| 已读资料 | 实际证据 | 不能据此推导的结论 |
-| --- | --- | --- |
-| Mobile AI 2021 手机视频超分挑战正文 | OPPO Find X2 / 骁龙 865 / Adreno 650，REDS 双三次退化；`320×180 → 1280×720`，报告最高约 80 FPS | 不能当作 720P 输入、真实重压缩短剧、Flutter 合成和持续发热条件下的播放帧率。[SR15] |
-| NTIRE 2026 Mobile Real-World SR 正文与官方代码 | 天玑 8400、FP16，速度测 `128×128 → 512×512`；PLKSR-Rep 总分第一、质量分第八，113.85倍是相对 OSEDiff 的加速 | 不能把 113.85倍写成 FPS，也不能把综合冠军当作画质最好的模型或整帧实时承诺。[SR16]、[SR17] |
-| NTIRE 2025 Efficient SR 正文 | 双三次退化的图像任务，报告使用 RTX A6000 测时 | “高效”榜单不能代替手机实机与真实压缩域的评估。[SR38] |
-| FlashVSR 正文 Table 2 与代码说明 | 单张 A100、`768×1408`，约 17 FPS、约 11.1 GB 峰值显存，仍有 8 帧 lookahead；消费级 GPU 兼容性另有说明 | 不满足普通手机或常见 25–30 FPS 短剧的通用实时要求；8 帧前视也不等于零延迟。[SR18] |
-| Artoriuz 的 mpv 放大博文 | 明确说明使用单张动漫图和人工降采样比较，并讨论训练域、下采样与抗振铃 | 可以学习评测方法，不能把该排名当作真人短剧或所有 GPU 的排名。[SR22] |
-| Microsoft Edge VSR 工程博文 | 按分辨率选择模型、对电池供电和设备能力做限制，讨论每帧计算期限 | 可以借鉴分档和功耗策略；Edge 自有模型不是可直接移植的开源播放器组件，文中的限制也不是所有 VSR 实现的通用限制。[SR24] |
-| Kazumi 的实际播放器代码 | Flutter 通过 `NativePlayer.command` 切换 Shader，先等待播放器 / 视频控制器初始化，并把资源放到应用目录；项目使用自己的 media-kit 分支 | 可以借鉴集成方式，不能认为使用相同包名就有相同渲染能力，也不能照抄动漫预设作为真人效果。[SR21] |
-
-### 设备端架构与实施依据
-
-~~~mermaid
-flowchart LR
-    A[源站原画或本地文件] --> B[现有 libmpv 解码]
-    B --> C[输入格式与显示尺寸判断]
-    C --> D[通用 GPU 缩放或 Shader]
-    C --> E[Windows 硬件超分]
-    D --> F[输出尺寸与色彩处理]
-    E --> F
-    F --> G[Flutter 视频纹理]
-    G --> H[控制界面与弹幕叠加]
-~~~
-
-`d3d11vpp` 位于 mpv 视频滤镜阶段，GLSL 位于渲染阶段，上图表示可选路径，不表示两者使用相同 API。保持 Go 的媒体请求、缓存、下载及局域网协议职责不变。每帧图像留在原生 GPU 路径，不经 Dart 字节数组、截图接口、PNG 临时文件或本地 HTTP 转码再回送播放器。
-
-**已接入的模块与修改位置：**
-
-| 模块 | 责任与边界 |
-| --- | --- |
-| `VideoEnhancementController`，从 `lib/player_screen.dart` 接入 | 负责选档、输入变化、状态、错误恢复和释放；复用当前播放生命周期，操作携带播放器实例与分集代次，丢弃过期结果 |
-| `VideoOutputSizeAdapter` | 分开保存原视频尺寸与目标纹理尺寸；处理设备像素比、横竖屏、窗口大小和 Surface 生命周期，避免输出尺寸反写为源视频尺寸 |
-| 增强后端 | 基础缩放、GLSL、Windows VPP 分别实现能力查询、应用与恢复；每次仅一个后端拥有增强配置 |
-| `PlaybackPreferences`、`LocalStore` | 保存用户选择并兼容旧备份；设备能力、实测档位、驱动失效记录留在本机，不随局域网进度同步到另一台设备 |
-| `lib/player_menu.dart`、`lib/television_controls.dart` | 共用选项和当前状态；手机、桌面及 TV 均有可发现入口，不依赖手势才能操作 |
-| 原生适配与资源 | 必要改动维护在本项目 `packages/` / 平台源码，Shader 放 `assets/`；这些根目录已在同步脚本收录范围内，新增构建输入时继续核对导出清单 |
-
-Shader 从随包资源释放到应用私有目录，以版本和 SHA256 校验后原子替换，不以“文件存在”判定永远不用更新。不要求访问下载目录或手动导入 Shader。初始化后通过 `NativePlayer` 的属性 / 命令接口应用完整、有序的受控配置，传参使用结构化参数，处理 Windows 盘符和路径分隔规则。[SR02]、[SR21] 不在 libmpv 渲染回调内阻塞调用普通播放器 API，避免线程互相等待。[SR03]
-
-**输出尺寸必须先做正确：**
-
-1. 根据原始 `w/h`、`dw/dh`、SAR、旋转信息及实际视频绘制矩形，计算物理像素目标。Flutter 的逻辑像素先乘设备像素比；黑边、面板、整个桌面宽度都不算视频内容尺寸。
-2. 例如 `720×1280` 竖屏短剧在 `1920×1080` 横屏桌面上完整显示时，内容约 `608×1080`，属于缩小，无需超分；在 `1080×1920` 内容区域才是 1.5倍放大。
-3. 桌面通过尺寸适配器驱动 `setSize`；Android 补齐 Surface / Texture 的目标尺寸支持，保留原插件初始化顺序与硬解连接。窗口拖动、旋转和连续尺寸通知去抖，仅在目标改变时调整，不按每个 UI 帧重建 Surface。
-4. 单独预算 CNN 的 2倍中间纹理。最终只显示 1080P，不代表中间张量也只有 1080P；`720×1280` 的 2倍中间图已经是 `1440×2560`。倍率不足或资源不够时直接换任意倍率缩放 / 轻量档，不强行运行大中间图再缩回去。
-
-**Shader 的格式与触发条件：**
-
-- 初始通用基线比较 `scale=spline36`、保守的色度缩放与合适的下采样；仅在基线通过后考虑更锐的 EWA 滤镜。不要套用可能一并改变其他渲染行为的整套 `gpu-hq` 配置。
-- 对 YUV / LUMA 路径，比较 `ravu-lite-ar-r2.hook` 与小型 FSRCNNX；对 Android RGB 硬解路径，优先比较作用于 `MAIN` 的 `ravu-r2-rgb.hook` / `ravu-zoom-ar-r2-rgb.hook`。后续移植 CNN 时，亮度提取与色彩重建单独实现、检查，不能只把 `HOOK LUMA` 改名为 `MAIN`。
-- 原版 RAVU 的部分 2倍 Shader 在两边放大比例超过约 √2 时才执行，FSRCNNX 发布版本的条件是两边超过 1.3倍。必须结合 `WHEN` 和实际输出尺寸判断生效，不能只看配置列表非空。[SR08]、[SR10]
-- 根目录普通 Shader、`gather` 和 `compute` 版本的图形能力要求不同。首期优先兼容路径；只有确认 OpenGL ES 版本、采样精度、半浮点纹理及所需扩展后才启用更高要求的实现。
-- 首期神经 / 专用超分限定经过验证的 SDR 路径。HDR、Dolby Vision、10-bit 或色彩信息不完整的内容维持原播放器处理，不为适配 `nv12` 强制截成 8-bit；不全局覆盖 BT.601 / BT.709、范围或传递函数。
-
-**Windows 专用超分：**
-
-先固定包含缩放接口和后续格式修复的 libmpv / FFmpeg / ANGLE 组合，再确认 `d3d11vpp` 能力和共享的 D3D11 设备。优先复用 `hwdec_d3d11egl`，检查混合显卡笔记本上解码、处理、显示的适配器是否一致，避免帧经过 CPU 下载 / 再上传。[SR07]
-
-`d3d11vpp=scale=1.5:scaling-mode=nvidia:format=nv12` 仅是 **SDR、相应上下文已就绪时** 的参数示例；Intel 使用相应的 `intel` 模式。倍率由显示目标计算，滤镜需要自己的标签，卸载只移除本功能拥有的配置。不会向旧的 2023 年内核发送这组参数；新固定内核仍需运行条件与输出确认。mpv 文档明确指出，这些模式只启用相应驱动扩展，实际效果依赖硬件与驱动设置。[SR06]
-
-第一选择是 mpv / 驱动现有路径。若改用独立 NVIDIA SDK，需要另行核对运行库、支持平台和再分发条件；调研时原 RTX Video SDK 入口已转向 NVIDIA AI for Media，不能假设旧教程中的下载与授权条件仍然成立。[SR39] 不把独立 MPC、浏览器或商业离线软件作为本 App 的运行依赖。
-
-### 分档、性能控制与交互
-
-首批未验证开发快照默认关闭增强，用户可手动选择自动或其他档位试用。自动策略仍受格式、尺寸、资源、实际渲染结果和温控限制；是否调整默认值等待集中验证。判断设备时使用实际渲染后端与能力，不只根据 Android 版本、显卡品牌或旗舰机名称判断。
-
-2026-09-22 追加核对 mpv / libplacebo hook 文档、Qualcomm Snapdragon GSR 和 Edge VSR 工程说明后，0.2.24 不再在 Android 手机或 Android TV 暴露当前 mpv 增强链路。移动端后续优先评估单 pass、低带宽的空间上采样 / 锐化路线，例如 SGSR / FSR1 类思路，再看是否值得接入紧凑 CNN 或原生推理后端。LUMA hook 在 MediaCodec 外部 RGB / OES 纹理路径上不一定触发，不能直接把桌面 LUMA shader 当作手机最佳实践。[SR02]、[SR04]、[SR41]、[SR42]
-
-| 平台 / 条件 | 初始自动策略 |
-| --- | --- |
-| Android 手机 | 0.2.24 隐藏入口并不初始化增强链路；后续按 SGSR / FSR1 类单 pass 移动端 shader、RGB / LUMA hook 覆盖和设备耗时重新评估 |
-| Windows 核显、AMD 或不支持专用接口的显卡 | 同一套基础缩放与通用 Shader；具备 LUMA、算力和显存余量时可用小型 CNN |
-| Windows 已验收 NVIDIA / Intel 组合 | 可选专用超分，按目标倍率与资源余量启用；驱动升级、上下文变化或异常后重新判定 |
-| 电池节省模式、发热、2倍 / 3倍播放、多个高负载任务 | 降低算法或输出上限，必要时关闭；插电不代表可以忽略发热 |
-| Android TV | 0.2.24 隐藏入口并不初始化增强链路；电视端单独验收前不启用当前方案 |
-| iOS | 最后实施；单独评估 Metal / Core ML 和现有原生输出，当前不宣称支持 |
-
-按 `帧预算 = 1000 /（源帧率 × 播放倍速）` 毫秒做保守估算：30 FPS 原速约 33.3 ms，2倍约 16.7 ms，3倍约 11.1 ms；实际还需区别按解码帧执行的滤镜与按显示帧执行的渲染 Pass。初始目标为增强新增耗时 P95 不超过该预算的约 25%，给解码、同步和 Flutter 合成留出余量；不是允许整个 App 每帧都用满这个时间。
-
-自动降级采用持续窗口与回差：过滤切集、seek、网络缓冲及正常倍速调度后，连续约 10 秒出现明显超时 / 新增丢帧（初始候选阈值 1%），或温控恶化，就逐级降低；首期同一播放会话只自动降级，避免反复升降导致画面风格跳动。新分集或用户主动重选时才重新评估升档。异常状态和用户手动关闭立即生效。
-
-Android 使用可用的 Thermal API、供电与省电状态辅助决策；`getThermalHeadroom` 不超过每 10 秒一次，处理 NaN / 不支持，不能把始终返回“无发热”的设备当作无限预算。[SR29] Windows 优先根据实际渲染耗时、掉帧和供电状态判定，不依赖所有机器都能取得 GPU 温度。
-
-显存预算包括中间特征图、纹理池和重复缓冲，不用模型文件大小代替峰值显存。例如 `1080×1920` 的一张 RGBA16F 纹理约 15.8 MiB，8 张已约 126.6 MiB。手机可从“新增纹理 / 张量预算约 128 MiB”作为待校准上限起步，超过预算先换档；不把该数字当作所有手机都应分配的额度。
-
-**Windows 已接入入口：播放器 → 播放设置 → 画质增强**，在“清晰度”面板也能操作。选项采用“关闭 / 自动 / 省电增强 / 清晰优先”，由设备选择具体后端；不在普通用户流程堆放模型名、Shader 路径和图形 API 名称。Android 手机、Android TV 与 iOS 不显示入口。实际信息显示“轻量增强”“神经超分”或“已因发热降低增强”等，与用户选择的偏好分开。
-
-提供独立“原画对比”按钮，切换同一播放器的增强状态，保持位置、倍速、音量、源画质和相同的显示尺寸，不新建第二个播放器。不要占用已有的画面长按 3倍速手势。字幕控件和 Flutter 弹幕在增强后叠加；片源本身烧录的字幕无法单独排除，需纳入质量验收。0.2.24 起 TV 入口和对比按钮已隐藏。
-
-### 失败恢复与实际生效判定
-
-| 已知问题 / 上游经验 | 应落实的行为 |
-| --- | --- |
-| Shader 编译失败、缺少扩展、精度或半浮点格式不兼容 | 撤回本功能的配置，恢复基础播放并给出一次轻提示；不能把增强错误一律送入现有网络解析重试流程 |
-| `glsl-shaders` 已写入，但没有可用的 LUMA 或未满足 `WHEN` | 状态标为未生效 / 当前无需增强，不显示“AI 超分正在运行”；有条件时通过实际 render pass 及新帧样本确认 |
-| GLES 精度导致偏色 | media-kit #1438 是 Linux GLES 的实际报告，不是本 App Android 已复现的结论；用来建立跨后端颜色检查项，不盲目全局改精度。[SR30] |
-| 驱动超分日志提示 enabled，画面却没变化 | mpv #15700 说明配置 / 日志不能单独证明实际效果；核对目标尺寸、输入格式、驱动活动与受控对比。[SR32] |
-| `d3d11vpp` 因输入格式或上下文不兼容被禁用 | #14758 涉及上传格式与 `nv12` 修正；2026 年 #18301 关于缺少 D3D11 上下文的补丁仍为 open，不能按已发布能力设计。失败及时撤回，不允许留下“只有声音没有画面”。[SR31]、[SR33] |
-| Android TV / GPU 后端差异 | mpv-android #824 的 Shield TV `gpu-next` 紫屏报告说明不能把统一升级 Vulkan 当作普适解决方法。[SR40] |
-| seek、切集、旋转、后台、用户切换、局域网交接、播放器销毁 | 取消过期配置任务并释放资源；保持原有播放意图与进度，接收端按自身能力增强。增强失败不能再次推送或改写播放记录 |
-
-日志以有界的版本、GPU / 后端、输入与目标尺寸、实际档位、失败阶段和耗时为主，不保存媒体地址、访问令牌或视频帧。使用 `current-vo`、`hwdec-current`、`video-params` / `video-out-params`、`avsync`、掉帧计数，以及支持时的 `vo-passes`。后者区分 fresh / redraw、单位为纳秒，并需按 mpv 的结构化 Node 接口读取；不是所有 VO 都实现，缺失不能解释为“耗时为 0”。Flutter 自身帧率不等于视频增强的 GPU 耗时。[SR37]
-
-### 分批实施与集中验收
-
-SR-1、SR-2 与 SR-4 已接入源码，小型动漫 CNN 也包含在本轮；SR-3 的通用手机第二代模型、离线修复和 iOS 仍待实施。以下是集中验收标准，当前均未通过平台验收，本轮不启动画质与持续性能测试。
-
-| 顺序 | 完整交付范围 | 完成条件 |
-| --- | --- | --- |
-| SR-1：Android / Windows 共用基础 | 输出尺寸适配、保守高质量缩放、RGB / LUMA 轻量 Shader、偏好与备份、菜单 / 对比、状态、温控降级及错误隔离 | 两个平台都能明确判断实际生效；关闭和失败恢复正常播放；开发快照继续标 `unverified` |
-| SR-2：Windows 专用与神经档 | 固定原生库、检查 ANGLE / D3D11 互通，接入 NVIDIA / Intel VPP 与小型 FSRCNNX 候选、设备与版本失效处理 | 不依赖外置播放器；分别验收支持、不支持和混合显卡设备，不按品牌直接放行 |
-| SR-3：手机第二代 CNN | 依据首批实测挑选 FSRCNN 系或 2026 紧凑真实退化模型，完成 RGB Shader 或原生推理后端、模型资源和持续负载控制 | 同时胜过高质量缩放基线并满足持续播放预算，才替换自动档；ncnn / LiteRT 支持 GPU 不代表已经打通解码纹理零 CPU 往返路径。[SR27]、[SR28] |
-| SR-4：Android TV | 电视尺寸上限、遥控入口与对比、低功耗 SoC 和实际显示效果 | 与手机分别记录设备结论，避免电视模式默认重负载 |
-| 后续可选：Windows 本地离线修复 | 借鉴 Video2X 的原生队列管线，输出独立增强副本，保留原文件、音轨、时序和失败恢复 | 单独列入后续开发范围；不改变当前下载和合并语义，不是本次实时增强的前置条件。[SR25] |
-| 最后：iOS | 原生媒体输出和 Metal / Core ML 专项 | 在 iOS 独立验收后才标支持 |
-
-**恢复验证后的集中验收矩阵：**
-
-| 维度 | 必须覆盖 |
-| --- | --- |
-| 图像与内容 | 合成的分辨率、渐变、斜线、运动和字幕夹具；需要评价真人皮肤 / 发丝时另用用户明确提供或授权的非站源素材。本轮及后续默认验证不下载或分析站源图片 |
-| 退化与时序 | 双三次缩小与实际编码压缩分别测；轻度 / 重度压缩、运动、切镜、暗部、硬字幕。不要仅测一张静态动漫图 |
-| 尺寸与格式 | 360 / 480 / 720P，9:16 与 16:9，旋转 / SAR / 非整数设备像素比；显示小于源尺寸、1.25倍、1.5倍、2倍；H.264 / HEVC、RGB / YUV，以及 HDR / 10-bit 的安全回退 |
-| 性能与播放 | 24 / 25 / 30 / 60 FPS、1 / 2 / 3倍速；首帧、切集、seek、全屏、窗口连续缩放、预加载、弹幕和同步交接；比较开启 / 关闭后的耗时 P50 / P95、峰值显存、额外丢帧和 A/V 偏差 |
-| 持续负载 | 固定亮度、供电和环境条件，运行约 20–30 分钟，记录热稳定后的行为，不能以冷机最初几秒作为性能结论 |
-| 设备 | Android 至少覆盖 Adreno / Mali 和较低性能档；Windows 覆盖 Intel 核显、NVIDIA RTX、AMD、混合显卡 / 软件渲染回退；TV / iOS 独立记录 |
-| 生命周期与失败 | Shader 缺失 / 版本过期、编译失败、VPP 不支持、设备重置、显存不足、后台 / 恢复、锁定 / 切换用户、快速开关、已排队任务过期、偏好保存失败 |
-| 质量判定 | 与原画及高质量缩放基线做同尺寸、同帧率对比；配对夹具可用 PSNR / SSIM，感知与视频稳定性另外评估。面部改变、塑料感、重边、字幕破坏或新增闪烁即为失败，不能只凭无参考评分或模型排名通过 |
-
-分发时逐项记录代码、Shader、权重和运行库许可，固定版本 / 哈希并携带必要声明。已核对 RAVU Shader 为 LGPLv3，FSRCNNX 1.1 发布 Shader 的文件头为 LGPLv3+（其训练仓库的根许可证并不相同），ArtCNN / Anime4K 为 MIT；Kazumi 代码为 GPL-3.0。参考架构不意味着直接搬入整个项目，权重与 SDK 的再分发条件也不能从仓库代码许可证自动推导。
-
-### 调研来源与证据索引
-
-检索日期为 2026-09-22。查阅了论文摘要及相关正文、官方文档、公开项目源码、工程博文和 issue 讨论；没有访问站源图片或视频。部分通用搜索入口触发验证码 / 限流，以下结论以直接读到的公开资料为依据。单个 issue 只作为回归场景来源，不推断所有设备都有同一缺陷。
-
-| 来源 | 类型与本方案采用的证据 |
-| --- | --- |
-| [SR01] media-kit | 已安装锁定版本的 NativePlayer、Android / NativeVideoController、Windows VideoOutput / ANGLE 源码；对应项目上游入口 |
-| [SR02] mpv GLSL 文档 | Hook 阶段、格式依赖、WHEN、路径列表与自定义渲染 Pass |
-| [SR03] libmpv Render API | 支持后端、OpenGL 上下文与线程约束 |
-| [SR04] mpv AImageReader 源码 | MediaCodec 映射为 RGB0 / external OES，解释 LUMA Shader 兼容问题 |
-| [SR05] mpv 652a1dd 滤镜文档 | 对照本项目 Windows 2023 构建，确认当时没有 VPP 超分缩放参数 |
-| [SR06] mpv PR #14698 / [滤镜文档快照](https://github.com/mpv-player/mpv/blob/c6c4c38d7f4aa82ad2a29a4c3b142f19123f5b9e/DOCS/man/vf.rst) | 缩放扩展于 2024 年合入；实际启用依赖硬件和驱动 |
-| [SR07] mpv hwdec_d3d11egl | ANGLE 设备取得、NV12 / P010 与 D3D11 硬解上下文注册 |
-| [SR08] mpv-prescalers / RAVU | RGB / LUMA、2倍 / 任意倍率、抗振铃、图形能力与许可证 |
-| [SR09] FSRCNN，ECCV 2016 | 在低分辨率特征域计算、小网络及后置放大的设计依据 |
-| [SR10] FSRCNNX 1.1 发布说明与 Shader | 通用 / LineArt 区别、轻度压缩训练、实际 Hook / WHEN 和文件许可 |
-| [SR11] ArtCNN | 明确的动漫目标、实时 C 系列与离线 R 系列区别 |
-| [SR12] Anime4K | 主要优化原生 1080P 动漫；低清重退化与真人并非默认目标 |
-| [SR13] Real-ESRGAN，ICCVW 2021 | 高阶退化、振铃 / 过冲与真实图像修复 |
-| [SR14] RealBasicVSR，CVPR 2022 | 清理模块、传播伪影和视频训练 / 推理取舍 |
-| [SR15] Mobile AI 2021 视频超分挑战 | 手机 GPU 推理可行性与 180P → 720P 测试条件 |
-| [SR16] NTIRE 2026 Mobile Real-World SR / [官方代码](https://github.com/jiatongli2024/NTIRE2026_Mobile_RealWorld_ImageSR) | 天玑 8400、小图速度测试、质量 / 速度综合排名与公开代码 |
-| [SR17] PLKSR-Rep，CVPRW 2026 | 紧凑 CNN、真实退化训练及竞赛加速比的实际含义 |
-| [SR18] FlashVSR 论文 / 项目 | A100 上约 17 FPS、显存和前视延迟，区分 streaming 与零延迟 |
-| [SR19] SeedVR2 项目 | 3B / 7B 一步扩散修复与实际依赖，作为高算力路线对照 |
-| [SR20] NTIRE 2026 Short-form UGC Video Restoration | 与真实短视频更接近的修复研究范围 |
-| [SR21] Kazumi 播放控制源码 | 已有 Flutter 应用如何管理 Shader、初始化和播放器生命周期 |
-| [SR22] Artoriuz mpv upscaling 博文 | 训练域、下采样、抗振铃和单图评测边界 |
-| [SR23] MPC Video Renderer D3D11VP 源码 | 已有播放器中 NVIDIA / Intel 驱动扩展的实际接入 |
-| [SR24] Microsoft Edge VSR 工程博文 | 分辨率分档、供电限制、模型耗时与帧预算 |
-| [SR25] Video2X | 原生 C/C++ 视频修复、队列与离线处理路线 |
-| [SR26] Real-ESRGAN-ncnn-vulkan 源码 | 公开实现包含上传、分块、同步等待和输出，不能等同解码纹理直接推理 |
-| [SR27] ncnn Vulkan notes | GPU 能力、统一内存映射与 CPU / GPU 边界 |
-| [SR28] LiteRT Android GPU 文档 | GPU delegate 的线程和运行方式；独立于播放器纹理接入问题 |
-| [SR29] Android Thermal API | 热状态、headroom、采样频率与设备差异 |
-| [SR30] media-kit #1438 | Linux GLES 复杂 Shader 的采样精度 / 偏色报告 |
-| [SR31] mpv #14758 | VPP 上传格式失败、NV12 处理与只剩声音的后续报告 |
-| [SR32] mpv #15700 | “已启用”日志不足以证明 RTX VSR 实际生效 |
-| [SR33] mpv PR #18301 | 缺少 D3D11 设备时的滤镜失败；调研时仍未合入 |
-| [SR34] mpv #8137 | 多帧 / 持久纹理需求；普通 GLSL 配置不等于已有时序 VSR 框架 |
-| [SR35] AMD AMF HQScaler | VideoSR / FSR 枚举与额外原生处理路线 |
-| [SR36] FidelityFX FSR2 文档 | 游戏时序重建所需深度、运动矢量和抖动等输入 |
-| [SR37] mpv 属性文档 | render pass 统计、计时单位、掉帧和音画同步属性的边界 |
-| [SR38] NTIRE 2025 Efficient SR 正文 | A6000 图像基准与双三次退化，说明性能数据需带上下文 |
-| [SR39] NVIDIA AI for Media | RTX Video SDK 旧入口的当前目标，独立 SDK 选型与授权需重新核对 |
-| [SR40] mpv-android #824 | Shield TV 切换 gpu-next 后紫屏的设备兼容报告 |
-| [SR41] Snapdragon GSR | 移动端单 pass 空间上采样 / 锐化路线，说明替代方案在移动 GPU 上可能慢和耗电 |
-| [SR42] libplacebo custom shaders | LUMA / CHROMA / RGB hook 触发边界，作为手机硬解纹理路径不能直接套 LUMA shader 的依据 |
-
-[SR01]: https://github.com/media-kit/media-kit
-[SR02]: https://mpv.io/manual/master/#options-glsl-shader
-[SR03]: https://github.com/mpv-player/mpv/blob/c6c4c38d7f4aa82ad2a29a4c3b142f19123f5b9e/include/mpv/render.h
-[SR04]: https://github.com/mpv-player/mpv/blob/c6c4c38d7f4aa82ad2a29a4c3b142f19123f5b9e/video/out/hwdec/hwdec_aimagereader.c
-[SR05]: https://github.com/mpv-player/mpv/blob/652a1dd/DOCS/man/vf.rst
-[SR06]: https://github.com/mpv-player/mpv/pull/14698
-[SR07]: https://github.com/mpv-player/mpv/blob/c6c4c38d7f4aa82ad2a29a4c3b142f19123f5b9e/video/out/opengl/hwdec_d3d11egl.c
-[SR08]: https://github.com/bjin/mpv-prescalers
-[SR09]: https://arxiv.org/abs/1608.00367
-[SR10]: https://github.com/igv/FSRCNN-TensorFlow/releases/tag/1.1
-[SR11]: https://github.com/Artoriuz/ArtCNN
-[SR12]: https://github.com/bloc97/Anime4K
-[SR13]: https://arxiv.org/abs/2107.10833
-[SR14]: https://arxiv.org/abs/2111.12704
-[SR15]: https://openaccess.thecvf.com/content/CVPR2021W/MAI/html/Ignatov_Real-Time_Video_Super-Resolution_on_Smartphones_With_Deep_Learning_Mobile_AI_CVPRW_2021_paper.html
-[SR16]: https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Li_The_First_Challenge_on_Mobile_Real-World_Image_Super-Resolution_at_NTIRE_CVPRW_2026_paper.html
-[SR17]: https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Deng_PLKSR-Rep_A_Compact_Large-Kernel_CNN_for_Mobile_Real-World_Image_Super-Resolution_CVPRW_2026_paper.html
-[SR18]: https://arxiv.org/abs/2510.12747
-[SR19]: https://github.com/ByteDance-Seed/SeedVR
-[SR20]: https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Li_NTIRE_2026_Challenge_on_Short-form_UGC_Video_Restoration_in_the_CVPRW_2026_paper.html
-[SR21]: https://github.com/Predidit/Kazumi/blob/4fed48b527768782d66b127f171d96babd7c427b/lib/pages/player/controller/player_playback_controller.dart
-[SR22]: https://artoriuz.github.io/blog/mpv_upscaling.html
-[SR23]: https://github.com/Aleksoid1978/VideoRenderer/blob/e52f9965beaa850e61e0ccbff8682655c796ba14/Source/D3D11VP.cpp
-[SR24]: https://blogs.windows.com/msedgedev/2023/03/08/video-super-resolution-in-microsoft-edge/
-[SR25]: https://github.com/k4yt3x/video2x
-[SR26]: https://github.com/xinntao/Real-ESRGAN-ncnn-vulkan/blob/master/src/realesrgan.cpp
-[SR27]: https://github.com/Tencent/ncnn/blob/master/docs/how-to-use-and-FAQ/vulkan-notes.md
-[SR28]: https://developers.google.com/edge/litert/android/gpu
-[SR29]: https://developer.android.com/games/optimize/adpf/thermal
-[SR30]: https://github.com/media-kit/media-kit/issues/1438
-[SR31]: https://github.com/mpv-player/mpv/issues/14758
-[SR32]: https://github.com/mpv-player/mpv/issues/15700
-[SR33]: https://github.com/mpv-player/mpv/pull/18301
-[SR34]: https://github.com/mpv-player/mpv/issues/8137
-[SR35]: https://github.com/GPUOpen-LibrariesAndSDKs/AMF/blob/a4c8f39ae1959c9ca9d56ade35d6a23c52fc77c5/amf/public/include/components/HQScaler.h
-[SR36]: https://github.com/GPUOpen-Effects/FidelityFX-FSR2
-[SR37]: https://mpv.io/manual/master/#property-list
-[SR38]: https://openaccess.thecvf.com/content/CVPR2025W/NTIRE/papers/Ren_The_Tenth_NTIRE_2025_Efficient_Super-Resolution_Challenge_Report_CVPRW_2025_paper.pdf
-[SR39]: https://developer.nvidia.com/topics/ai/generative-ai/ai-for-media
-[SR40]: https://github.com/mpv-android/mpv-android/issues/824
-[SR41]: https://github.com/SnapdragonGameStudios/snapdragon-gsr
-[SR42]: https://libplacebo.org/custom-shaders/
+如需在电视端重新实现，需要改用 Android 侧的视频处理路径（Vulkan / MediaCodec VPP 或软件超分），并重新评估盒子芯片的算力与温控，属于独立工程而非移植。
 
 ## 安装包与平台状态
 
@@ -618,10 +335,7 @@ SR-1、SR-2 与 SR-4 已接入源码，小型动漫 CNN 也包含在本轮；SR-
 
 | 平台 | 包与状态 |
 | --- | --- |
-| Android 8.0+ 手机 | 已生成全站源版 `0.2.30+36` ARM64 APK；ARMv7 / x86_64 构建脚本保留，安装与运行仍待验收 |
-| Windows 10/11 x64 | 完整 ZIP 解压后运行 `hongguojian.exe`，全站源版为 `zhenguojian.exe`，保留所有 DLL 和 `data`；局域网原生发现依赖 Windows 10 1903+。Actions 已构建并检查包内文件，运行器的自检在播放器开始播放一步超时（无音频和图形设备），未做设备验收 |
-| Android TV | 与手机共用 `0.2.30+36` ARM64 APK；已补强自动识别与电视模式横屏，待电视 / 盒子实机验收；0.2.12 选集 / 设置及 0.2.13 同步 / 推送操作仍待集中验证 |
-| iOS 15.1+ | 已加入工程、Go 核心链接、媒体依赖、文件管理、系统代理桥接、Bonjour / 局域网权限和构建脚本；Actions 已产出未签名 IPA，需用自签工具安装，尚无已签名 IPA 和真机验收 |
+| Android TV / 盒子 | **唯一支持的平台。** 界面固定为遥控器导航与横屏，manifest 标记 leanback 为必需、touchscreen 为不兼容，系统不会把该包安装到手机或平板；只保留 `LEANBACK_LAUNCHER` 桌面入口。已生成全站源版 `0.2.30+36` ARM64 APK，安装与运行待电视 / 盒子实机验收 |
 
 | 历史版本 0.2.15 | 安装包 | 大小 |
 | --- | --- | --- |
@@ -681,40 +395,31 @@ Flutter `3.47.4`、Dart `3.12+`、Go `1.24.1+`、Python `3.10+`。Android 需要
 ~~~sh
 python3 scripts/build_android.py
 python3 scripts/build_android.py --all-sources
+python3 scripts/build_android.py --television-only
 python3 scripts/build_android.py --abi arm64-v8a
 python3 scripts/build_android.py --cn-mirrors
 ~~~
 
 首条默认生成红果鉴，第二条生成含全部站源的真果鉴。`--all-sources` 可以与 `--abi`、`--cn-mirrors` 组合，例如 `python3 scripts/build_android.py --all-sources --abi arm64-v8a --cn-mirrors`。
 
-Windows PowerShell：
+### 电视专用构建（`--television-only`）
 
-~~~powershell
-.\scripts\build_windows.ps1
-.\scripts\build_windows.ps1 -AllSources
-.\scripts\build_windows.ps1 -ChinaMirrors
-~~~
+`--television-only` 把界面锁定为电视 / 遥控器，与 `--all-sources` 正交，可任意组合。本电视专用版已是唯一模式，保留该开关仅为与既有构建脚本和 CI 兼容。
 
-Windows 也可运行 `python scripts/build_windows.py --all-sources`；省略参数为红果版。
+该开关在编译期生效，实现方式是 `TELEVISION_ONLY` dart-define，具体行为：
+
+| 层面 | 行为 |
+| --- | --- |
+| 界面 | `television` 恒为 true，全部分支走遥控焦点导航；原`displayMode` 的 `standard` 不再生效，「更多」中的「界面模式」入口隐藏 |
+| 屏幕方向 | 原生与 Flutter 两侧同时锁定横屏，生命周期切换不会解除 |
+| 设备探测 | 跳过运行时探测，直接采用电视模式 |
+| 安装范围 | `android.software.leanback` 标记为 required，touchscreen / faketouch 标记为不兼容，系统不会把该包提供给手机和平板 |
+| 启动入口 | 只保留 `LEANBACK_LAUNCHER`，不出现在手机桌面 |
+| 画中画 | manifest 关闭 `supportsPictureInPicture`，播放器不显示该入口 |
+
+需要在手机上安装调试时不要使用该开关；改用默认构建。
 
 国内构建可使用以上镜像开关：Flutter/pub 使用 `storage.flutter-io.cn` / `pub.flutter-io.cn`，Android 的 Google、Maven Central 和 Gradle 插件依赖优先使用阿里云镜像，同时保留官方仓库。已有环境变量优先；镜像配置仅作用于本次构建，保留锁定的依赖版本与 SHA256 校验值；结束后恢复原锁文件并清理临时 Gradle 配置，不改全局代理。GitHub Actions 默认使用官方源。镜像可能有同步延迟，遇到镜像缺失或异常可去掉开关重试；此开关不替代 Flutter SDK 和 Gradle 发行包的初次安装。
-
-iOS 未签名构建、只生成核心、或额外生成模拟器核心（不会启动模拟器）：
-
-~~~sh
-python3 scripts/build_ios.py
-python3 scripts/build_ios.py --all-sources
-python3 scripts/build_ios.py --core-only
-python3 scripts/build_ios.py --core-only --simulator
-~~~
-
-签名 IPA 使用自己在 Xcode 配置的签名身份、描述文件与 ExportOptions：
-
-~~~sh
-python3 scripts/build_ios.py --export-options /path/to/ExportOptions.plist
-~~~
-
-产物在 `dist/android`、`dist/windows`、`dist/ios`，红果版以 `hongguojian-` 开头，全站源版以 `zhenguojian-` 开头。iOS 脚本将 Go 核心生成 XCFramework，再经 CocoaPods 链接并检查 FFI 导出符号；媒体库随应用打包。
 
 首次 Android 调试先编译对应架构核心：
 
@@ -724,9 +429,7 @@ flutter pub get --enforce-lockfile
 flutter run
 ~~~
 
-Windows 对应 `--platform windows` 和 `flutter run -d windows`。
-
-直接使用 Flutter 命令调试全站源版时，先给 `build_native.py` 加 `--all-sources`，再运行 `flutter run --dart-define=ALL_SOURCES=true`；iOS 对应 `build_ios.py --core-only --all-sources`。切回默认版同样重新构建默认核心，Flutter 参数省略或设为 `--dart-define=ALL_SOURCES=false`。脚本会同步设置 Dart 常量和 Go 编译参数，应用启动时检查二者是否一致，避免混装原生库。
+直接使用 Flutter 命令调试全站源版时，先给 `build_native.py` 加 `--all-sources`，再运行 `flutter run --dart-define=ALL_SOURCES=true`。切回默认版同样重新构建默认核心，Flutter 参数省略或设为 `--dart-define=ALL_SOURCES=false`。脚本会同步设置 Dart 常量和 Go 编译参数，应用启动时检查二者是否一致，避免混装原生库。
 
 播放器使用 [media_kit](https://github.com/media-kit/media-kit) / libmpv，合并和导出使用 [FFmpegKit min-gpl](https://github.com/sk3llo/ffmpeg_kit_flutter)，含 FFmpeg、x264 / x265 等 GPL 媒体组件，各组件适用上游许可证。FFmpegKit 不参与正常播放或下载的转码；系统 FFmpeg 只用于开发验证，用户不用另装。
 
@@ -772,7 +475,7 @@ python3 scripts/finish_task.py --message "本次实际完成的变更"
 python3 scripts/sync_source.py --check
 ~~~
 
-尚未完成集中验证和平台验收时，当前版本 `0.2.30+36` 仅作为未验证开发快照，不标为完成验收的正式版本。源码压缩包由收尾脚本按 `真果·鉴-YYYYMMDDHHMM.zip` 生成。此前版本的历史记录仍保留在正式源码仓库中；本项目的 `guoapp` 镜像不创建或维护本地 Git 提交、分支和 tag。源码同步一致性确认仍执行。
+尚未完成集中验证和实机验收时，当前版本 `0.3.0+37` 仅作为未验证开发快照，不标为完成验收的正式版本。源码压缩包由收尾脚本按 `真果·鉴-YYYYMMDDHHMM.zip` 生成。此前版本的历史记录仍保留在正式源码仓库中；本项目的 `guoapp` 镜像不创建或维护本地 Git 提交、分支和 tag。源码同步一致性确认仍执行。
 
 局域网自动连接、记录自动同步与推送播放的早期方案文档快照 `v0.2.12-unverified-lan-design` 保留；该历史快照仅有设计，0.2.13 才接入实现。
 
@@ -794,13 +497,13 @@ unzip ../真果·鉴-YYYYMMDDHHMM.zip -d ../restore
 | `lib` | 页面、播放器、本地用户、FFI、下载和媒体处理 |
 | `native/core`、`native/bridge` | 独立站源核心、缓存、下载、目录迁移及 C ABI |
 | `android`、`windows`、`ios` | 平台工程与必要资源 |
-| `assets/video_enhancement`、`packages/media_kit_libs_windows_video` | 增强 Shader 与许可、固定 Windows 媒体依赖插件 |
+
 | `scripts`、`.github/workflows` | 构建、签名、验证、同步和版本快照 |
 | `test`、`integration_test` | 自动化与设备回归 |
 
 ## 功能 TODO：与旧短剧库对照
 
-以下对照 `../短剧库` 与红果专用版 `../果果剧库` 的功能和近期修复，基于 2026-09-21 的 0.2.6 审查，并更新至 App **0.2.30+36** 的源码实施状态。已有解析辅助代码不代表 App 已接入功能；未完成集中验证与平台验收的项目保持未勾选，标明实际实施与检查范围。同时记录 App 自身的数据与恢复边界缺陷。Android 手机和 Windows 同为首要平台，设备验收单独记录。
+以下对照 `../短剧库` 与红果专用版 `../果果剧库` 的功能和近期修复，基于 2026-09-21 的 0.2.6 审查，并更新至 App **0.3.0+37** 的源码实施状态。已有解析辅助代码不代表 App 已接入功能；未完成集中验证与平台验收的项目保持未勾选，标明实际实施与检查范围。同时记录 App 自身的数据与恢复边界缺陷。Android 电视为唯一平台，设备验收单独记录。
 
 共 34 项：3 项沿用历史已完成标记，30 项已实现但待集中验证，1 项为黄果 AI 播放恢复的外部连接阻塞。0.2.12 已补入原清单最后六项可独立实施的功能及界面调整；0.2.13 接入新增 P3-2 / P3-3，2026-09-22 新增 P3-4 调研方案；0.2.16 接入 P1-9 剧果站源，0.2.17 接入 P1-10 野果和 P1-11 帝果，0.2.18 接入 P3-4 实时画质增强与动漫档，0.2.19 统一该站源的用户可见名称为剧果，0.2.20 接入 Android 播放器画中画，0.2.21 修正播放器主题跟随、画质增强配置显示和 Android 自动档策略，0.2.22 修正手机竖屏播放页选集默认折叠，0.2.23 调整全屏播放器控制栏和暗色弹窗，0.2.24 在移动端和电视端隐藏并禁用画质增强，0.2.25 暂停显示帝果入口并保留旧数据兼容，0.2.26 参考 dsd-video-parser 重做帝果 vplayer 签名解析并恢复入口，0.2.27 去掉帝果 VIP 标记分集的播放确认弹窗，0.2.28 增加收尾源码压缩包，0.2.29 补强电视自动识别与统一横屏方向管理，0.2.30 优化全屏自动连播的控制栏显示。新增功能均保留未验证状态，功能范围与验收状态分别记录。
 

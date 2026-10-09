@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import 'app_layout.dart';
-import 'app_bottom_navigation.dart';
 import 'core_bridge.dart';
 import 'catalog_filters.dart';
 import 'catalog_browser.dart';
@@ -22,7 +21,6 @@ import 'widgets.dart';
 import 'vip_icon.dart';
 import 'settings_screen.dart';
 import 'profiles_screen.dart';
-import 'search_input.dart';
 import 'source_gate_dialog.dart';
 import 'source_gate_taps.dart';
 import 'sources_screen.dart';
@@ -58,7 +56,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _failedMore = false;
   final _categorySelections = <String, String>{};
   late final CatalogBrowser _browser;
-  bool _searchVisible = false;
   bool _categoriesLoading = false;
   String? _categoriesError;
   int _categoryGeneration = 0;
@@ -88,18 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
   bool get _onlineSearch => _group.sources.any((source) => source.onlineSearch);
   bool get _searchSuggestions =>
       _group.sources.any((source) => source.searchSuggestions);
-  String get _searchHint {
-    final online = _group.sources
-        .where((source) => source.onlineSearch)
-        .toList();
-    if (online.isEmpty) {
-      return '筛选本机已更新剧库';
-    }
-    final names = online.map((source) => source.name).join('、');
-    return online.length == _group.sources.length
-        ? '搜索$names'
-        : '搜索${names}及本机剧库';
-  }
 
   String get _category => _categorySelections[_group.id] ?? '';
   List<CatalogCategory> get _categories => _browser.categories(_group);
@@ -268,7 +253,6 @@ class _HomeScreenState extends State<HomeScreen> {
         _selectionMode = false;
         _selectedDramas.clear();
         _search.clear();
-        _searchVisible = false;
         _submittedQuery = '';
       });
       return;
@@ -292,32 +276,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _load(useCache: true);
   }
 
-  void _swipeCategory(DragEndDetails details) {
-    final velocity = details.primaryVelocity ?? 0;
-    if (velocity.abs() < 240) return;
-    final categories = _displayCategories;
-    final index = categories.indexWhere(
-      (entry) => entry.id == _displayCategory,
-    );
-    final next = index + (velocity < 0 ? 1 : -1);
-    if (next >= 0 && next < categories.length) {
-      _changeCategory(categories[next].id);
-    }
-  }
-
-  void _toggleSearch() {
-    if (AppLayout.isTelevision(context)) {
-      _televisionSearch();
-      return;
-    }
-    if (_showRecommendations) _changeCategory('');
-    final hadQuery = _search.text.isNotEmpty;
-    setState(() {
-      _searchVisible = !_searchVisible;
-      if (!_searchVisible) _search.clear();
-    });
-    if (!_searchVisible && hadQuery) _searchChanged('');
-  }
+  void _toggleSearch() => unawaited(_televisionSearch());
 
   void _openRankings() {
     _pauseCatalog();
@@ -349,42 +308,6 @@ class _HomeScreenState extends State<HomeScreen> {
     await _loadCategories();
     if (mounted && (!_onlineSearch || _submittedQuery.isEmpty)) {
       await _load(useCache: true);
-    }
-  }
-
-  Future<void> _chooseDisplayMode() async {
-    final selection = await showDialog<String>(
-      context: context,
-      builder: (context) => SimpleDialog(
-        title: const Text('界面模式'),
-        children: [
-          RadioGroup<String>(
-            groupValue: widget.store.displayMode,
-            onChanged: (value) => Navigator.pop(context, value),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                for (final mode in const {
-                  'auto': '自动识别设备',
-                  'television': '电视 / 遥控器',
-                  'standard': '手机 / 电脑',
-                }.entries)
-                  RadioListTile<String>(
-                    value: mode.key,
-                    autofocus: mode.key == widget.store.displayMode,
-                    title: Text(mode.value),
-                  ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-    if (selection != null && mounted) {
-      await saveUserChange(
-        context,
-        () => widget.store.setDisplayMode(selection),
-      );
     }
   }
 
@@ -478,22 +401,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ///
   /// 注意：非 loading 分支不能放 CircularProgressIndicator —— 无限动画会让
   /// widget 测试的 pumpAndSettle 永远等不到静止（已踩过这个坑）。
-  Widget _catalogFooter(BuildContext context, {required bool remote}) {
+  Widget _catalogFooter(BuildContext context) {
     if (_loadingMore) {
       return const CircularProgressIndicator();
     }
     if (_failedMore) {
-      if (remote) {
-        return RemoteButton(
-          label: '加载失败，重试',
-          icon: Icons.refresh,
-          onPressed: () => _load(more: true),
-        );
-      }
-      return OutlinedButton.icon(
+      return RemoteButton(
+        label: '加载失败，重试',
+        icon: Icons.refresh,
         onPressed: () => _load(more: true),
-        icon: const Icon(Icons.refresh),
-        label: const Text('加载失败，重试'),
       );
     }
     final hint = Text(
@@ -824,11 +740,9 @@ class _HomeScreenState extends State<HomeScreen> {
     animation: widget.store,
     builder: (context, _) => LayoutBuilder(
       builder: (context, constraints) {
-        final television = AppLayout.isTelevision(context);
-        final desktop = constraints.maxWidth >= 840;
         final scaffold = Scaffold(
           appBar: AppBar(
-            toolbarHeight: television ? 64 : null,
+            toolbarHeight: 64,
             titleSpacing: 12,
             title: _selectionMode
                 ? const Text(
@@ -929,12 +843,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   IconButton(
                     key: const ValueKey('toggle-search'),
-                    tooltip: _searchVisible ? '收起搜索' : '搜索',
-                    icon: Icon(
-                      _searchVisible
-                          ? Icons.search_off_rounded
-                          : Icons.search_rounded,
-                    ),
+                    tooltip: '搜索',
+                    icon: const Icon(Icons.search_rounded),
                     onPressed: _toggleSearch,
                   ),
                 ],
@@ -979,8 +889,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           builder: (_) => ProfilesScreen(store: widget.store),
                         ),
                       );
-                    } else if (value == 'display') {
-                      _chooseDisplayMode();
                     } else if (value == 'about') {
                       showAboutDialog(
                         context: context,
@@ -1020,7 +928,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       value: 'settings',
                       child: Text('设置与备份'),
                     ),
-                    const PopupMenuItem(value: 'display', child: Text('界面模式')),
                     const PopupMenuItem(
                       value: 'about',
                       child: Text('关于$appName'),
@@ -1035,68 +942,36 @@ class _HomeScreenState extends State<HomeScreen> {
             top: false,
             child: Row(
               children: [
-                if (television) ...[
-                  SizedBox(
-                    width: 164,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 24, 8, 12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          for (final entry in [
-                            (Icons.explore_rounded, '发现'),
-                            (Icons.bookmark_rounded, '追剧'),
-                            (Icons.history_rounded, '最近观看'),
-                            if (widget.store.canDownload)
-                              (Icons.download_rounded, '下载'),
-                          ].indexed)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 14),
-                              child: RemoteButton(
-                                key: ValueKey('tv-nav-${entry.$1}'),
-                                label: entry.$2.$2,
-                                icon: entry.$2.$1,
-                                selected: _tab == entry.$1,
-                                autofocus: entry.$1 == 0,
-                                onPressed: () => _onNavSelected(entry.$1),
-                              ),
+                SizedBox(
+                  width: 164,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 24, 8, 12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (final entry in [
+                          (Icons.explore_rounded, '发现'),
+                          (Icons.bookmark_rounded, '追剧'),
+                          (Icons.history_rounded, '最近观看'),
+                          if (widget.store.canDownload)
+                            (Icons.download_rounded, '下载'),
+                        ].indexed)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 14),
+                            child: RemoteButton(
+                              key: ValueKey('tv-nav-${entry.$1}'),
+                              label: entry.$2.$2,
+                              icon: entry.$2.$1,
+                              selected: _tab == entry.$1,
+                              autofocus: entry.$1 == 0,
+                              onPressed: () => _onNavSelected(entry.$1),
                             ),
-                        ],
-                      ),
+                          ),
+                      ],
                     ),
                   ),
-                  const VerticalDivider(width: 1),
-                ] else if (desktop) ...[
-                  NavigationRail(
-                    selectedIndex: _tab,
-                    onDestinationSelected: _onNavSelected,
-                    labelType: NavigationRailLabelType.all,
-                    groupAlignment: -.8,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.explore_outlined),
-                        selectedIcon: Icon(Icons.explore),
-                        label: Text('发现'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.bookmark_border_rounded),
-                        selectedIcon: Icon(Icons.bookmark_rounded),
-                        label: Text('追剧'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.history_rounded),
-                        label: Text('最近观看'),
-                      ),
-                      if (widget.store.canDownload)
-                        NavigationRailDestination(
-                          icon: Icon(Icons.download_outlined),
-                          selectedIcon: Icon(Icons.download_rounded),
-                          label: Text('下载'),
-                        ),
-                    ],
-                  ),
-                  const VerticalDivider(width: 1, thickness: 1),
-                ],
+                ),
+                const VerticalDivider(width: 1),
                 Expanded(
                   child: _tab == 0
                       ? widget.store.sources.isEmpty
@@ -1104,7 +979,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 title: '暂无可用站源',
                                 message: '请联系管理员为当前用户开放站源。',
                               )
-                            : _catalog(selectionInBody: desktop || television)
+                            : _catalog()
                       : _tab == 3
                       ? DownloadsScreen(
                           repository: widget.repository,
@@ -1129,42 +1004,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          bottomNavigationBar: desktop || television
-              ? null
-              : _selectionMode
-              ? _selectionBar()
-              : AppBottomNavigation(
-                  selectedIndex: _tab,
-                  onDestinationSelected: _onNavSelected,
-                  destinations: [
-                    NavigationDestination(
-                      icon: Icon(Icons.explore_outlined),
-                      selectedIcon: Icon(Icons.explore),
-                      label: '发现',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.bookmark_border_rounded),
-                      selectedIcon: Icon(Icons.bookmark_rounded),
-                      label: '追剧',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(Icons.history_rounded),
-                      label: '最近观看',
-                    ),
-                    if (widget.store.canDownload)
-                      NavigationDestination(
-                        icon: Icon(Icons.download_outlined),
-                        selectedIcon: Icon(Icons.download_rounded),
-                        label: '下载',
-                      ),
-                  ],
-                ),
-        );
-        if (!television && !_selectionMode) return scaffold;
+          );
+        if (!_selectionMode) return scaffold;
         return PopScope(
-          canPop:
-              !_selectionMode &&
-              (!television || _tab == 0 && _search.text.isEmpty),
+          canPop: !_selectionMode && (_tab == 0 && _search.text.isEmpty),
           onPopInvokedWithResult: (didPop, result) {
             if (!didPop) _televisionBack();
           },
@@ -1182,64 +1025,10 @@ class _HomeScreenState extends State<HomeScreen> {
     ),
   );
 
-  Widget _catalog({required bool selectionInBody}) {
+  Widget _catalog() {
     final items = _visible;
-    final television = AppLayout.isTelevision(context);
     return Column(
       children: [
-        if (_searchVisible && !television)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 4, 16, 4),
-            child: SearchInput(
-              key: ValueKey('search-${_group.id}'),
-              controller: _search,
-              autofocus: true,
-              hint: _searchHint,
-              suggestions: _searchSuggestions
-                  ? widget.repository.suggestions
-                  : null,
-              onChanged: _searchChanged,
-              onCancel: () => unawaited(widget.repository.cancelSuggestions()),
-              onSearch: _submitSearch,
-            ),
-          ),
-        if (_searchVisible &&
-            _search.text.trim().isEmpty &&
-            widget.store.recentSearches.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        for (final query in widget.store.recentSearches)
-                          Padding(
-                            padding: const EdgeInsets.only(right: 8),
-                            child: ActionChip(
-                              avatar: const Icon(
-                                Icons.history_rounded,
-                                size: 16,
-                              ),
-                              label: Text(query),
-                              onPressed: () => _submitSearch(query),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                ),
-                IconButton(
-                  tooltip: '清空最近搜索',
-                  onPressed: () =>
-                      saveUserChange(context, widget.store.clearRecentSearches),
-                  icon: const Icon(Icons.delete_outline_rounded, size: 20),
-                ),
-              ],
-            ),
-          ),
         CatalogFilters(
           key: ValueKey('filters-${_group.id}'),
           categories: _displayCategories,
@@ -1264,13 +1053,10 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         if (_showRecommendations)
           Expanded(
-            child: GestureDetector(
-              onHorizontalDragEnd: television ? null : _swipeCategory,
-              child: RecommendationsScreen(
-                repository: widget.repository,
-                store: widget.store,
-                embedded: true,
-              ),
+            child: RecommendationsScreen(
+              repository: widget.repository,
+              store: widget.store,
+              embedded: true,
             ),
           )
         else ...[
@@ -1317,20 +1103,18 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           Expanded(
-            child: GestureDetector(
-              onHorizontalDragEnd: television ? null : _swipeCategory,
-              child: _loading && _items.isEmpty
-                  ? const Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CircularProgressIndicator(),
-                          SizedBox(height: 18),
-                          Text('正在加载剧集'),
-                        ],
-                      ),
-                    )
-                  : _items.isEmpty && _error != null
+            child: _loading && _items.isEmpty
+                ? const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 18),
+                        Text('正在加载剧集'),
+                      ],
+                    ),
+                  )
+                : _items.isEmpty && _error != null
                   ? StatusPanel(
                       title: '暂时无法加载',
                       message: _error!,
@@ -1365,69 +1149,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       action: '重试',
                     )
                   : LayoutBuilder(
-                      builder: (context, constraints) {
-                        if (television) {
-                          return _televisionGrid(
-                            items,
-                            constraints.maxWidth,
-                            key:
-                                'catalog-${_group.id}-$_category-$_submittedQuery',
-                            controller: _scroll,
-                            footer: Padding(
-                              padding: const EdgeInsets.fromLTRB(18, 0, 18, 24),
-                              child: Center(
-                                child: _catalogFooter(context, remote: true),
-                              ),
-                            ),
-                          );
-                        }
-                        final padding = constraints.maxWidth < 600
-                            ? 16.0
-                            : 24.0;
-                        return RefreshIndicator(
-                          onRefresh: _refreshCatalog,
-                          child: CustomScrollView(
-                            controller: _scroll,
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            slivers: [
-                              SliverPadding(
-                                padding: EdgeInsets.fromLTRB(
-                                  padding,
-                                  0,
-                                  padding,
-                                  16,
-                                ),
-                                sliver: SliverGrid(
-                                  gridDelegate: dramaGridDelegate(
-                                    context,
-                                    constraints.maxWidth - 2 * padding,
-                                  ),
-                                  delegate: SliverChildBuilderDelegate(
-                                    (_, index) => _catalogTile(items[index]),
-                                    childCount: items.length,
-                                  ),
-                                ),
-                              ),
-                              SliverToBoxAdapter(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 24),
-                                  child: Center(
-                                    child: _catalogFooter(
-                                      context,
-                                      remote: false,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                      builder: (context, constraints) => _televisionGrid(
+                        items,
+                        constraints.maxWidth,
+                        key:
+                            'catalog-${_group.id}-$_category-$_submittedQuery',
+                        controller: _scroll,
+                        footer: Padding(
+                          padding: const EdgeInsets.fromLTRB(18, 0, 18, 24),
+                          child: Center(
+                            child: _catalogFooter(context),
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
-            ),
           ),
-          if (_selectionMode && selectionInBody)
-            _selectionBar(safeBottom: false),
+          if (_selectionMode) _selectionBar(safeBottom: false),
         ],
       ],
     );

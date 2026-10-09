@@ -27,7 +27,6 @@ class LocalSnapshot {
   static const globalKeys = {
     'profiles',
     'activeProfile',
-    'displayMode',
     'themeMode',
     'autoExport',
     'exportPosters',

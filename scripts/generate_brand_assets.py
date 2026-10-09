@@ -1,5 +1,4 @@
 import argparse
-import json
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -20,13 +19,6 @@ def save(image, name):
     destination.parent.mkdir(parents=True, exist_ok=True)
     image.save(destination)
 
-contents = json.loads((root / 'ios/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json').read_text())
-for entry in contents['images']:
-    if 'filename' in entry:
-        size = round(float(entry['size'].split('x')[0]) * float(entry['scale'].rstrip('x')))
-        save(icon.resize((size, size), Image.Resampling.LANCZOS),
-             'ios/Runner/Assets.xcassets/AppIcon.appiconset/' + entry['filename'])
-save(icon.resize((256, 256), Image.Resampling.LANCZOS), 'windows/runner/resources/app_icon.ico')
 font = ImageFont.truetype(str(options.font), 76)
 for name, resource in [('红果鉴', 'tv_banner'), ('真果鉴', 'tv_banner_all_sources')]:
     banner = Image.new('RGB', (640, 360), '#101114')

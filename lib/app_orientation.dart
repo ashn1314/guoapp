@@ -89,12 +89,7 @@ class AppOrientationController {
 
   Future<void> _apply({bool force = false}) {
     final next = _pending.catchError((Object _) {}).then((_) async {
-      if (_disposed ||
-          kIsWeb ||
-          (defaultTargetPlatform != TargetPlatform.android &&
-              defaultTargetPlatform != TargetPlatform.iOS)) {
-        return;
-      }
+      if (_disposed) return;
       final television = _television;
       if (defaultTargetPlatform == TargetPlatform.android &&
           (force || _nativeTelevision != television)) {

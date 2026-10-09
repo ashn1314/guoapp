@@ -1,5 +1,3 @@
-import 'video_enhancement_preferences.dart';
-
 const playbackSpeeds = [.5, .75, 1.0, 1.25, 1.5, 2.0, 3.0];
 
 class PlaybackPreferences {
@@ -9,7 +7,6 @@ class PlaybackPreferences {
     this.autoAdvance = true,
     this.danmaku = true,
     this.preload = true,
-    this.enhancement = const VideoEnhancementPreferences(),
   });
 
   final double speed;
@@ -17,7 +14,6 @@ class PlaybackPreferences {
   final bool autoAdvance;
   final bool danmaku;
   final bool preload;
-  final VideoEnhancementPreferences enhancement;
 
   PlaybackPreferences copyWith({
     double? speed,
@@ -25,14 +21,12 @@ class PlaybackPreferences {
     bool? autoAdvance,
     bool? danmaku,
     bool? preload,
-    VideoEnhancementPreferences? enhancement,
   }) => PlaybackPreferences(
     speed: speed ?? this.speed,
     quality: quality ?? this.quality,
     autoAdvance: autoAdvance ?? this.autoAdvance,
     danmaku: danmaku ?? this.danmaku,
     preload: preload ?? this.preload,
-    enhancement: enhancement ?? this.enhancement,
   );
 
   Map<String, dynamic> toJson() => {
@@ -41,7 +35,6 @@ class PlaybackPreferences {
     'autoAdvance': autoAdvance,
     'danmaku': danmaku,
     'preload': preload,
-    'enhancement': enhancement.toJson(),
   };
 
   factory PlaybackPreferences.fromJson(Map<String, dynamic> value) {
@@ -59,7 +52,6 @@ class PlaybackPreferences {
       autoAdvance: autoAdvance,
       danmaku: danmaku,
       preload: preload,
-      enhancement: VideoEnhancementPreferences.fromJson(value['enhancement']),
     );
   }
 }

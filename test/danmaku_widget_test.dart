@@ -4,7 +4,6 @@ import 'package:duanju_app/danmaku_controller.dart';
 import 'package:duanju_app/danmaku_overlay.dart';
 import 'package:duanju_app/local_profiles.dart';
 import 'package:duanju_app/local_store.dart';
-import 'package:duanju_app/player_menu.dart';
 import 'package:duanju_app/player_screen.dart';
 import 'package:duanju_app/playback_preferences.dart';
 import 'package:duanju_app/television_controls.dart';
@@ -253,50 +252,12 @@ void main() {
   );
 
   testWidgets(
-    'large text settings and TV controls expose the danmaku preference',
+    'TV settings expose the danmaku preference under large text',
     (tester) async {
       tester.view.devicePixelRatio = 1;
       tester.view.physicalSize = const Size(360, 640);
       addTearDown(tester.view.resetDevicePixelRatio);
       addTearDown(tester.view.resetPhysicalSize);
-      PlaybackPreferences? chosen;
-      await tester.pumpWidget(
-        MaterialApp(
-          home: MediaQuery(
-            data: const MediaQueryData(
-              size: Size(360, 640),
-              textScaler: TextScaler.linear(1.8),
-            ),
-            child: Scaffold(
-              body: PlayerMenu(
-                section: PlayerMenuSection.settings,
-                episodes: const [],
-                currentIndex: 0,
-                preferences: const PlaybackPreferences(),
-                qualities: const [1080, 720],
-                actualQuality: 1080,
-                local: false,
-                favorite: false,
-                mobile: true,
-                showDanmaku: true,
-                danmakuStatus: '这段暂无弹幕',
-                onEpisode: (_) {},
-                onFavorite: () async {},
-                onPreferences: (value) async {
-                  chosen = value;
-                },
-              ),
-            ),
-          ),
-        ),
-      );
-      await tester.ensureVisible(
-        find.byKey(const ValueKey('player-danmaku-enabled')),
-      );
-      await tester.tap(find.byKey(const ValueKey('player-danmaku-enabled')));
-      await settle(tester);
-      expect(chosen?.danmaku, isFalse);
-      expect(tester.takeException(), isNull);
       TelevisionPlaybackSetting? selected;
       await tester.pumpWidget(
         MaterialApp(

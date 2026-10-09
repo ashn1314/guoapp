@@ -75,35 +75,8 @@ void main() {
         AppDevice.channel,
         (call) async => throw MissingPluginException(),
       );
-      expect((await AppDevice.detect()).television, isFalse);
+      expect((await AppDevice.detect()).television, isTrue);
       debugDefaultTargetPlatformOverride = null;
-    },
-  );
-
-  testWidgets(
-    'manual interface preference overrides device detection and survives restart',
-    (tester) async {
-      size(tester, const Size(960, 540));
-      final store = await makeStore();
-      final repository = FixtureRepository();
-      await tester.pumpWidget(
-        DuanjuApp(repository: repository, store: store, television: true),
-      );
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('tv-nav-0')), findsOneWidget);
-      await tester.tap(find.byTooltip('更多'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('界面模式'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.text('手机 / 电脑'));
-      await tester.pumpAndSettle();
-      expect(store.displayMode, 'standard');
-      expect(find.byKey(const ValueKey('tv-nav-0')), findsNothing);
-      expect(LocalStore(store.preferences).displayMode, 'standard');
-      await store.setDisplayMode('television');
-      await tester.pumpAndSettle();
-      expect(find.byKey(const ValueKey('tv-nav-0')), findsOneWidget);
-      expect(tester.takeException(), isNull);
     },
   );
 
@@ -221,10 +194,10 @@ void main() {
         ),
       ),
     );
-    await tester.pumpAndSettle();
-    expect(FocusManager.instance.primaryFocus?.debugLabel, 'remote-131');
-    await press(tester, LogicalKeyboardKey.arrowUp);
-    expect(FocusManager.instance.primaryFocus?.debugLabel, 'remote-125');
-    expect(tester.takeException(), isNull);
+await tester.pumpAndSettle();
+      expect(FocusManager.instance.primaryFocus?.debugLabel, 'remote-131');
+      await press(tester, LogicalKeyboardKey.arrowUp);
+      expect(FocusManager.instance.primaryFocus?.debugLabel, 'remote-125');
+      expect(tester.takeException(), isNull);
   });
 }

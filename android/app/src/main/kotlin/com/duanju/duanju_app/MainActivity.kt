@@ -27,9 +27,11 @@ class MainActivity : FlutterActivity() {
     private var thermalHeadroom: Double? = null
     private var deviceChannel: MethodChannel? = null
     private var televisionMode = false
+    private val televisionLocked = BuildConfig.TELEVISION_ONLY
 
     @Suppress("DEPRECATION")
     private fun isTelevisionDevice(): Boolean {
+        if (televisionLocked) return true
         val configuration = resources.configuration
         val mode = (getSystemService(Context.UI_MODE_SERVICE) as? UiModeManager)?.currentModeType
             ?: (configuration.uiMode and Configuration.UI_MODE_TYPE_MASK)
@@ -128,10 +130,11 @@ class MainActivity : FlutterActivity() {
                             if (enabled == null) {
                                 result.error("invalid_display_mode", "缺少电视模式状态", null)
                             } else {
-                                val changed = televisionMode != enabled
-                                televisionMode = enabled
-                                if (enabled || changed) {
-                                    requestedOrientation = if (enabled) {
+                                val effective = enabled || televisionLocked
+                                val changed = televisionMode != effective
+                                televisionMode = effective
+                                if (effective || changed) {
+                                    requestedOrientation = if (effective) {
                                         ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
                                     } else ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
                                 }

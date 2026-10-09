@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -44,7 +43,7 @@ ThemeData televisionTheme(ThemeData theme) {
 }
 
 class AppDevice {
-  const AppDevice({this.television = false, this.version = appVersion});
+  const AppDevice({this.television = true, this.version = appVersion});
   final bool television;
   final String version;
   static const channel = MethodChannel('duanju/device');
@@ -52,18 +51,13 @@ class AppDevice {
   static Future<AppDevice> detect({
     AppDevice fallback = const AppDevice(),
   }) async {
-    if (defaultTargetPlatform != TargetPlatform.android) {
-      return const AppDevice();
-    }
     try {
       final data = await channel
           .invokeMapMethod<String, dynamic>('deviceInfo')
           .timeout(const Duration(seconds: 2));
-      final television = data?['television'];
-      if (television is! bool) return fallback;
       final version = data?['version'];
       return AppDevice(
-        television: television,
+        television: true,
         version: version is String && version.isNotEmpty
             ? version
             : fallback.version,
@@ -88,9 +82,7 @@ class AppLayout extends InheritedWidget {
   final bool television;
   final String version;
 
-  static bool isTelevision(BuildContext context) =>
-      context.dependOnInheritedWidgetOfExactType<AppLayout>()?.television ??
-      false;
+  static bool isTelevision(BuildContext context) => true;
   static String versionOf(BuildContext context) =>
       context.dependOnInheritedWidgetOfExactType<AppLayout>()?.version ??
       appVersion;

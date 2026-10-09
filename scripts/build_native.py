@@ -9,11 +9,11 @@ from app_build import BuildVariant, add_variant_argument
 
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
-parser.add_argument('--platform', choices=['android', 'windows', 'darwin'], required=True)
+parser.add_argument('--platform', choices=['android'], default='android')
 parser.add_argument('--abi', action='append', choices=['arm64-v8a', 'armeabi-v7a', 'x86_64'])
 add_variant_argument(parser)
 options = parser.parse_args()
-variant = BuildVariant(options.all_sources)
+variant = BuildVariant(options.all_sources, options.television_only)
 
 environment = os.environ.copy()
 environment.setdefault('GOPROXY', 'https://goproxy.cn,direct')
@@ -63,15 +63,3 @@ if options.platform == 'android':
         if architecture == 'arm':
             extra['GOARM'] = '7'
         build('android', architecture, compiler, output, extra)
-elif options.platform == 'windows':
-    compiler = shutil.which('x86_64-w64-mingw32-gcc') or (shutil.which('gcc') if platform.system() == 'Windows' else None)
-    if not compiler:
-        raise SystemExit('请安装 MinGW-w64，并将其 bin 目录加入 PATH。')
-    build('windows', 'amd64', compiler, root / 'windows' / 'runner' / 'duanju_core.dll',
-          {'CGO_LDFLAGS': '-static-libgcc'})
-else:
-    compiler = shutil.which('clang')
-    if not compiler:
-        raise SystemExit('需要安装 Xcode Command Line Tools。')
-    build('darwin', 'arm64' if platform.machine() == 'arm64' else 'amd64', compiler,
-          root / 'native' / 'build' / 'darwin' / 'libduanju_core.dylib')

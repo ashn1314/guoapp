@@ -69,7 +69,6 @@ class _PlayerScreenState extends State<PlayerScreen>
   int _seekSequence = 0;
   bool _danmakuEnabled = true;
   late final PlaybackRateSync _rateSync;
-  final _playerFocus = FocusNode(debugLabel: 'player-surface');
   final _videoPaneKey = GlobalKey();
   final _menuRevision = ValueNotifier<int>(0);
   final List<StreamSubscription<dynamic>> _subscriptions = [];
@@ -101,10 +100,6 @@ class _PlayerScreenState extends State<PlayerScreen>
   bool _playIntent = true;
   bool _showControlsOnPlaybackReady = true;
   bool _pendingError = false;
-  bool _pictureInPictureSupported = false;
-  bool _pictureInPictureActive = false;
-  bool _pictureInPictureRequested = false;
-  bool _pictureInPictureHandlerInstalled = false;
   AppLifecycleState _lifecycleState = AppLifecycleState.resumed;
   String _loadingMessage = '正在准备播放';
   String? _error;
@@ -159,8 +154,6 @@ class _PlayerScreenState extends State<PlayerScreen>
         );
     _video = widget.videoBuilder == null ? VideoController(_player) : null;
     _rateSync = PlaybackRateSync(_player);
-    _playerFocus.addListener(() {
-      if (!_playerFocus.hasPrimaryFocus && !_closed) });
     _subscriptions.add(
       _player.stream.error.listen((error) {
         if (!_closed && _acceptErrors && mounted && error.trim().isNotEmpty) {
@@ -299,9 +292,7 @@ class _PlayerScreenState extends State<PlayerScreen>
 
 
   void _applyLifecycleVisibility({bool pauseWhenHidden = true}) {
-    final visible =
-        _lifecycleState == AppLifecycleState.resumed ||
-        _pictureInPictureVisible;
+    final visible = _lifecycleState == AppLifecycleState.resumed;
     _foreground = visible;
     _syncDanmaku();
     _syncPreload();
@@ -484,7 +475,6 @@ class _PlayerScreenState extends State<PlayerScreen>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _orientationController = AppOrientationScope.maybeOf(context);
     _scheduleSystemUi();
   }
 

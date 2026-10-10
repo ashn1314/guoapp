@@ -81,7 +81,6 @@ class _PlayerScreenState extends State<PlayerScreen>
   Timer? _saveTimer;
   Timer? _healthTimer;
   Timer? _errorTimer;
-  Timer? _pictureInPictureExitTimer;
   Future<void> _operations = Future<void>.value();
   late int _index;
   late final int _profileEpoch;
@@ -819,6 +818,152 @@ class _PlayerScreenState extends State<PlayerScreen>
     }
   }
 
+  void _notice(String message) {
+    if (!mounted || _closed) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  Future<void> _setPreferences(PlaybackPreferences preferences) async {
+    if (_closed || widget.store.profileEpoch != _profileEpoch) {
+      throw StateError('当前用户已变更');
+    }
+    await widget.store.setPlaybackPreferences(preferences);
+    if (!mounted || _closed || widget.store.profileEpoch != _profileEpoch)
+      return;
+    final qualityChanged = preferences.quality != _requestedQuality;
+    setState(() {
+      _speed = preferences.speed;
+      _requestedQuality = preferences.quality;
+      _autoAdvance = preferences.autoAdvance;
+      _danmakuEnabled = preferences.danmaku;
+      _preloadEnabled = preferences.preload;
+    });
+    _danmaku.setEnabled(_danmakuEnabled);
+    _syncDanmaku();
+    if (qualityChanged || !_preloadEnabled) _preloader.clear();
+    _syncPreload();
+    _menuRevision.value++;
+    await _rateSync.apply(_speed);
+    if (qualityChanged && _plan?.local != true) {
+      await _retry(quality: preferences.quality);
+    }
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      await widget.store.toggleFavorite(widget.detail.drama);
+    } catch (_) {
+      _notice('追剧记录未能保存，请检查存储空间后重试');
+    }
+  }
+
+  Future<void> _seekTo(Duration target) async {
+    if (_closed || _loading || _error != null) return;
+    _handoffOwned = false;
+    widget.handoff?.fail('接收端已调整播放位置');
+    final ticket = ++_seekSequence;
+    final generation = _generation;
+    _danmaku.beginSeek();
+    var succeeded = false;
+    try {
+      await _player.seek(target);
+      succeeded = true;
+    } catch (_) {
+      _notice('跳转失败，请重试');
+    } finally {
+      if (!_closed && ticket == _seekSequence && generation == _generation) {
+        _danmaku.endSeek(succeeded ? target : _player.state.position);
+      }
+    }
+  }
+
+  void _seek(int seconds) {
+    final desired = _player.state.position + Duration(seconds: seconds);
+    final maxDuration = _player.state.duration;
+    final target = desired < Duration.zero
+        ? Duration.zero
+        : maxDuration > Duration.zero && desired > maxDuration
+        ? maxDuration
+        : desired;
+    unawaited(_seekTo(target));
+  }
+
+  Future<void> _televisionEpisodes(BuildContext context) async {
+    if (_panelOpen || _closed) return;
+    setState(() => _panelOpen = true);
+    int? index;
+    try {
+      index = await showDialog<int>(
+        context: context,
+        builder: (_) => Theme(
+          data: televisionTheme(AppTheme.dark),
+          child: TelevisionEpisodeDialog(
+            episodes: widget.detail.episodes,
+            currentIndex: _index,
+          ),
+        ),
+      );
+    } finally {
+      if (mounted && !_closed) setState(() => _panelOpen = false);
+    }
+    if (index != null && mounted && !_closed && index != _index) {
+      await _play(index);
+    }
+  }
+
+  Future<void> _televisionSettings(BuildContext context) async {
+    if (_panelOpen || _closed) return;
+    setState(() => _panelOpen = true);
+    TelevisionPlaybackSetting? selection;
+    try {
+      selection = await showDialog<TelevisionPlaybackSetting>(
+        context: context,
+        builder: (menuContext) => AnimatedBuilder(
+          animation: Listenable.merge([_danmaku, _preloader]),
+          builder: (_, _) => Theme(
+            data: televisionTheme(AppTheme.dark),
+            child: TelevisionSettingsDialog(
+              speed: _speed,
+              quality: _requestedQuality,
+              qualities: _plan?.qualities ?? [],
+              favorite: widget.store.isFavorite(widget.detail.drama.id),
+              onFavorite: _toggleFavorite,
+              autoAdvance: _autoAdvance,
+              danmaku: _danmakuEnabled,
+              showDanmaku: widget.detail.drama.source == 'hongguo',
+              danmakuStatus: _danmaku.status,
+              onRetryDanmaku: _danmaku.canRetry ? _danmaku.retry : null,
+              preload: _preloadEnabled,
+              preloadStatus: _preloader.status,
+            ),
+          ),
+        ),
+      );
+    } finally {
+      if (mounted && !_closed) setState(() => _panelOpen = false);
+    }
+    if (selection == null || !mounted || _closed) return;
+    try {
+      await _setPreferences(
+        PlaybackPreferences(
+          speed: selection.speed,
+          quality: selection.quality,
+          autoAdvance: selection.autoAdvance,
+          danmaku: selection.danmaku,
+          preload: selection.preload,
+        ),
+      );
+    } catch (_) {
+      _notice('播放偏好未能保存，请重试');
+    }
+  }
+
+  void _back() {
+    Navigator.of(context).maybePop();
+  }
+
   Future<void> _switchOnline() async {
     _forceOnline = true;
     await _retry();
@@ -833,6 +978,185 @@ class _PlayerScreenState extends State<PlayerScreen>
       _index,
       position: position,
       playWhenReady: quality == null || _error != null || _player.state.playing,
+    );
+  }
+  @override
+  void dispose() {
+    _closed = true;
+    LanController.current?.detachPlayback(_lanIdentity);
+    widget.handoff?.fail('接收端已退出播放');
+    widget.store.removeListener(_accessChanged);
+    _danmaku.dispose();
+    _preloader.dispose();
+    _generation++;
+    WidgetsBinding.instance.removeObserver(this);
+    _saveTimer?.cancel();
+    _healthTimer?.cancel();
+    _errorTimer?.cancel();
+    _menuRevision.dispose();
+    unawaited(_saveProgress(flush: true));
+    for (final subscription in _subscriptions) {
+      subscription.cancel();
+    }
+    unawaited(widget.repository.release(_session));
+    unawaited(_loader.close().catchError((Object _) {}));
+    unawaited(
+      _operations.catchError((Object _) {}).then((_) async {
+        await _rateSync.pending.catchError((Object _) {});
+        await _player.dispose();
+      }),
+    );
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Theme(
+      data: televisionTheme(Theme.of(context)),
+      child: Builder(
+        builder: (context) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: AppTheme.systemBars(Brightness.dark),
+            child: _buildPlayer(context),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildPlayer(BuildContext context) {
+    final title = widget.detail.drama.title;
+    final episode = widget.detail.episodes[_index];
+    return PopScope(
+      canPop: true,
+      child: CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.escape): _back,
+          const SingleActivator(LogicalKeyboardKey.goBack): _back,
+        },
+        child: Focus(
+          autofocus: true,
+          child: Scaffold(
+            backgroundColor: Colors.black,
+            body: _videoPane(context, title, episode),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _videoPane(BuildContext context, String dramaTitle, Episode episode) {
+    final videoTheme = televisionTheme(AppTheme.dark);
+    final title =
+        '$dramaTitle · 第 ${episode.number} 集${_plan?.local == true ? ' · 本地' : ''}${episode.vip ? ' · VIP 试看' : ''}${(_plan?.routeIndex ?? 0) > 0 ? ' · 线路 ${_plan!.routeIndex + 1}' : ''}';
+    final controls = TelevisionControls(
+      player: _player,
+      title: title,
+      enabled: !_loading && _error == null,
+      showOnPlaybackReady: _showControlsOnPlaybackReady,
+      onTogglePlayback: _togglePlayback,
+      onSeek: _seek,
+      onPrevious: _index > 0 ? () => _play(_index - 1) : null,
+      onNext: _index + 1 < widget.detail.episodes.length
+          ? () => _play(_index + 1)
+          : null,
+      onEpisodes: () => _televisionEpisodes(context),
+      onSettings: () => _televisionSettings(context),
+      onBack: _back,
+      onPush: widget.mediaId == null ? _pushToDevice : null,
+    );
+    final layeredControls = Stack(
+      fit: StackFit.expand,
+      children: [
+        DanmakuOverlay(controller: _danmaku, aspectRatio: _aspectRatio),
+        controls,
+      ],
+    );
+    return Theme(
+      data: videoTheme,
+      child: Stack(
+        key: _videoPaneKey,
+        fit: StackFit.expand,
+        children: [
+          if (widget.videoBuilder != null)
+            widget.videoBuilder!(layeredControls)
+          else
+            Video(
+              controller: _video!,
+              fit: BoxFit.contain,
+              controls: (_) => layeredControls,
+            ),
+          if (_loading)
+            ColoredBox(
+              color: Colors.black.withValues(alpha: .78),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircularProgressIndicator(),
+                    const SizedBox(height: 16),
+                    Text(_loadingMessage),
+                  ],
+                ),
+              ),
+            ),
+          if (_error != null)
+            ColoredBox(
+              color: Colors.black.withValues(alpha: .9),
+              child: StatusPanel(
+                title: '暂时无法播放',
+                message: _error!,
+                onRetry: () => _retry(),
+                action: _localFailure ? '重试本地播放' : '重试播放',
+                secondaryAction: _localFailure && widget.allowOnlineFallback
+                    ? TextButton.icon(
+                        onPressed: _switchOnline,
+                        icon: const Icon(Icons.cloud_outlined),
+                        label: const Text('改为在线播放'),
+                      )
+                    : !_localFailure &&
+                          !widget.localOnly &&
+                          widget.repository.supportsSourceManagement
+                    ? SourceDiagnosticsButton(
+                        repository: widget.repository,
+                        store: widget.store,
+                        drama: widget.detail.drama,
+                      )
+                    : null,
+                icon: Icons.play_disabled_rounded,
+              ),
+            ),
+          if (_saveWarning != null)
+            Positioned(
+              top: 52,
+              left: 12,
+              right: 12,
+              child: SafeArea(
+                bottom: false,
+                child: Material(
+                  color: const Color(0xE6322424),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        Text(
+                          _saveWarning!,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                        TextButton(
+                          onPressed: _saveProgress,
+                          child: const Text('重试保存'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

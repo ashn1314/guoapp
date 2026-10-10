@@ -6,7 +6,8 @@ name: 格式修复（手动触发）
 # 产出（artifact: formatted）：
 #   changed_files.txt —— 被格式化的文件清单（相对路径，每行一个）
 #   lib / test / integration_test / test_driver —— 格式化后的源码
-# 配套脚本：tools/sync_source_to_repo.py --fix-format
+#
+# 用法：手动触发后下载 artifact，把 lib/test/integration_test/test_driver 覆盖回本地即可。
 
 on:
   workflow_dispatch:

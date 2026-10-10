@@ -947,7 +947,7 @@ class _PlayerScreenState extends State<PlayerScreen>
     if (selection == null || !mounted || _closed) return;
     try {
       await _setPreferences(
-        PlaybackPreferences(
+        _preferences.copyWith(
           speed: selection.speed,
           quality: selection.quality,
           autoAdvance: selection.autoAdvance,
